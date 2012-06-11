@@ -32,7 +32,7 @@ public class RoueMActivity extends Activity implements SensorEventListener {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_NORMAL);  
         distance = (EditText) findViewById(R.id.distance);
-        sensorManager.getOrientation(R, values);
+      //  sensorManager.getOrientation(R, values);
     }
 
     public void start(View v) throws InterruptedException {
