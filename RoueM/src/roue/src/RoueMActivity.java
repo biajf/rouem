@@ -29,7 +29,7 @@ public class RoueMActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         roue = new RoueMesureuse(this);
-        roue.initialiser();
+        roue.initialiser(SENSOR_SERVICE);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_NORMAL);  
         distance = (EditText) findViewById(R.id.distance);
