@@ -1,7 +1,6 @@
 package roue.src;
 
 import android.app.Activity;
-import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,14 +9,13 @@ import android.hardware.SensorManager;
 public class CapteurAndroid {
 
 	private SensorManager sensorManager;
-	float angle, s1,s2,s3;
+	float angle;
+	float[] valeurs;
 	String SENSOR_SERVICE;
 	
 	CapteurAndroid(String sensor_service)
 	{
 		SENSOR_SERVICE = sensor_service;
-		//gyroscope = null ;
-		//bousole = null ;
 	}
 	
 	public void initialiser(Activity activite){
@@ -44,9 +42,7 @@ public class CapteurAndroid {
 		
 		public void onSensorChanged(SensorEvent event) {
 			// TODO Auto-generated method stub
-			s1 = event.values[0];
-			s2 = event.values[1];
-			s3 = event.values[2];
+			valeurs = event.values;
 		}
 		
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -54,5 +50,15 @@ public class CapteurAndroid {
 			
 		}
 	};
+	
+	public float[] getgyroscope(){
+		return valeurs;
+	}
+	
+	public float getboussole(){
+		//Azimut entre l'axe y et le nord
+		return angle;
+	}
+	
 
 }
