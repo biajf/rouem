@@ -2,18 +2,11 @@ package roue.src;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.wahoofitness.api.WFAntException;
@@ -23,8 +16,6 @@ import com.wahoofitness.api.WFDisplaySettings;
 import com.wahoofitness.api.WFHardwareConnector;
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFAntError;
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFHardwareState;
-import com.wahoofitness.api.WFHardwareConnectorTypes.WFSensorType;
-import com.wahoofitness.api.comm.WFBikePowerConnection;
 import com.wahoofitness.api.comm.WFConnectionParams;
 import com.wahoofitness.api.comm.WFSensorConnection;
 import com.wahoofitness.api.comm.WFSensorConnection.WFSensorConnectionStatus;
@@ -33,21 +24,10 @@ import com.wahoofitness.api.comm.WFSensorConnection.WFSensorConnectionStatus;
 public class RoueMActivity extends Activity implements WFHardwareConnector.Callback {
 	private WFHardwareConnector mHardwareConnector;
 	private static final String TAG = "Test";
-	private WFConnectionParams connectParams;
-	private WFSensorConnection mConnection;
-	private static final int DIALOG_ID_SETTINGS = 0;
-	private static final int DIALOG_ID_BP_CALIBRATE = 1;
 	private CapteurWFFoot sensor1;
 	private CapteurWFBikeCadence sensor2;
 	private TextView foot;
 	private TextView bike;
-	
-	private enum MyMenu {
-		MENU_NONE,
-		MENU_SETTINGS,
-		MENU_BP_CALIBRATION,
-		MENU_EXIT,      
-	};
 	
 	
 	 @Override
@@ -203,8 +183,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	public void hwConnHasData() {
 		Log.d(TAG, "hwConnHasData");
 		//sensor1.updateDisplay();
-		WFSensorConnectionStatus tutu = sensor1.connectSensor();
-		WFSensorConnectionStatus toto = sensor2.connectSensor();
+		sensor1.connectSensor();
+		sensor2.connectSensor();
 		 foot.setText(sensor1.updateDisplay());
 		 bike.setText(sensor2.updateDisplay());
 		 //mBikeCadence.updateDisplay();

@@ -1,40 +1,30 @@
 package roue.src;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
 
-import com.wahoofitness.api.WFAntException;
-import com.wahoofitness.api.WFAntNotSupportedException;
-import com.wahoofitness.api.WFAntServiceNotInstalledException;
-import com.wahoofitness.api.WFDisplaySettings;
+
 import com.wahoofitness.api.WFHardwareConnector;
-import com.wahoofitness.api.WFHardwareConnector.Callback;
-import com.wahoofitness.api.WFHardwareConnectorTypes.WFAntError;
-import com.wahoofitness.api.WFHardwareConnectorTypes.WFHardwareState;
-import com.wahoofitness.api.WFHardwareConnectorTypes.WFSensorType;
 import com.wahoofitness.api.comm.WFConnectionParams;
 import com.wahoofitness.api.comm.WFSensorConnection;
 import com.wahoofitness.api.comm.WFSensorConnection.WFSensorConnectionStatus;
 
 
 
-public class CapteurWF extends LinearLayout implements WFSensorConnection.Callback {
+public class CapteurWF implements WFSensorConnection.Callback {
 
 	protected WFHardwareConnector mHardwareConnector;
 	protected WFSensorConnection mConnection;
 	protected short mSensorType;
 	
 	public CapteurWF(Context context) {
-		super(context);
+		//super(context);
 		//defaultSettings(context);
 	}
 
 	public CapteurWF(Context context, AttributeSet attrs) {
-		super(context, attrs);
+		//super(context, attrs);
 		//defaultSettings(context);
 	}
 	
@@ -49,7 +39,6 @@ public class CapteurWF extends LinearLayout implements WFSensorConnection.Callba
 protected WFSensorConnectionStatus connectSensor() {
 		
 		boolean retVal = (mHardwareConnector != null);
-		WFSensorConnectionStatus Tyty = getState() ;
 		if (retVal) {
 			
 			// set the button state based on the connection state.
