@@ -37,8 +37,10 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	private WFSensorConnection mConnection;
 	private static final int DIALOG_ID_SETTINGS = 0;
 	private static final int DIALOG_ID_BP_CALIBRATE = 1;
-	private CapteurWFBikeSpeed sensor1;
-	private TextView distance;
+	private CapteurWFFoot sensor1;
+	private CapteurWFBikeCadence sensor2;
+	private TextView foot;
+	private TextView bike;
 	
 	private enum MyMenu {
 		MENU_NONE,
@@ -52,7 +54,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.main);
-	        distance = (TextView)findViewById(R.id.textView1);
+	        foot = (TextView)findViewById(R.id.textView1);
+	        bike = (TextView)findViewById(R.id.textView2);
 	        Context context = this.getApplicationContext();
 	        int statusVisibility = TextView.INVISIBLE;
 	        String statusText = "";
@@ -74,6 +77,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 public void stop(View v)
 	 {
 		 sensor1.disconnectSensor();
+		 sensor2.disconnectSensor();
 	 }
 	public void antConnect(Context context,Bundle savedInstanceState,String statusText,int statusVisibility)
 	{
@@ -198,10 +202,11 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	@Override
 	public void hwConnHasData() {
 		Log.d(TAG, "hwConnHasData");
-		sensor1.updateDisplay();
+		//sensor1.updateDisplay();
 		WFSensorConnectionStatus tutu = sensor1.connectSensor();
-		 
-		 distance.setText(""+sensor1.getFootpodConnection().getDeviceNumber());
+		WFSensorConnectionStatus toto = sensor2.connectSensor();
+		 foot.setText(sensor1.updateDisplay());
+		 bike.setText(sensor2.updateDisplay());
 		 //mBikeCadence.updateDisplay();
 	}
 
@@ -239,8 +244,11 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	
 	public void initControls(){
 		
-		sensor1 = new CapteurWFBikeSpeed(getBaseContext());
+		sensor1 = new CapteurWFFoot(getBaseContext());
 		 sensor1.initControl(mHardwareConnector);
+		 
+		sensor2 = new CapteurWFBikeCadence(getBaseContext());
+		sensor2.initControl(mHardwareConnector);
 	}
 	    
 
