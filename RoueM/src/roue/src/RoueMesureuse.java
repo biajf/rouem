@@ -1,11 +1,13 @@
 package roue.src;
 
+import android.app.Activity;
+
 public class RoueMesureuse {
 	
-	private 
+	private Activity activite ;
 
-	RoueMesureuse(){
-		
+	RoueMesureuse(Activity activity){
+		activite = activity;
 	}
 	
 	
