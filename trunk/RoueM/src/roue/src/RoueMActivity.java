@@ -182,12 +182,11 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	@Override
 	public void hwConnHasData() {
 		Log.d(TAG, "hwConnHasData");
-		//sensor1.updateDisplay();
 		sensor1.connectSensor();
 		sensor2.connectSensor();
-		 foot.setText(sensor1.updateDisplay());
-		 bike.setText(sensor2.updateDisplay());
-		 //mBikeCadence.updateDisplay();
+		foot.setText(sensor1.updateDisplay());
+		bike.setText(sensor2.updateDisplay());
+		
 	}
 
 	public void hwConnStateChanged(WFHardwareState state) {
