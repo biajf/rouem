@@ -11,8 +11,7 @@ import com.wahoofitness.api.data.WFFootpodData;
 
 public class CapteurWFFoot extends CapteurWF {
 
-	public CapteurWFFoot(Context context) {
-		super(context);
+	public CapteurWFFoot() {
 		mSensorType = WFSensorType.WF_SENSORTYPE_FOOTPOD;
 	}
 

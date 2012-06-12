@@ -27,7 +27,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	private CapteurWFBikeCadence sensor2;
 	private TextView foot;
 	private TextView bike;
-	
+	private Bundle save;
 	
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
@@ -35,30 +35,30 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        setContentView(R.layout.main);
 	        foot = (TextView)findViewById(R.id.textView1);
 	        bike = (TextView)findViewById(R.id.textView2);
-	        Context context = this.getApplicationContext();
-	        int statusVisibility = TextView.INVISIBLE;
-	        String statusText = "";
+	        save = savedInstanceState;
+	       
 	         
 	        // check for ANT hardware support.
-	        antConnect(context, savedInstanceState, statusText, statusVisibility);
-	        
-
+	        //antConnect(context, savedInstanceState);
 	   }
 	 
 	 public void start(View v){
-		 
-		 
-		 
-		
-		 //distance.setText(""+tutu);
+		 antConnect(getBaseContext(), save);
 	 }
 	 
 	 public void stop(View v)
 	 {
 		 sensor1.disconnectSensor();
 		 sensor2.disconnectSensor();
+		 mHardwareConnector.destroy();
 	 }
-	public void antConnect(Context context,Bundle savedInstanceState,String statusText,int statusVisibility)
+	 
+	 public void pause(View v){
+		 sensor1.disconnectSensor();
+		 sensor2.disconnectSensor();
+		 mHardwareConnector.destroy();
+	 }
+	public void antConnect(Context context,Bundle savedInstanceState)
 	{
 		if (WFHardwareConnector.hasAntSupport(context)) {
         	
@@ -109,12 +109,12 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		        settings.bikeCoastingTimeout = 3.0f;       // seconds, default = 3    
 		        mHardwareConnector.setDisplaySettings(settings);
 		        
-		       statusVisibility = TextView.INVISIBLE;
+		       
 	        }
 	        catch (WFAntNotSupportedException nse) {
 	        	// ANT hardware not supported.
-	        	statusVisibility = TextView.VISIBLE;
-	        	statusText = "ANT not supported.";
+	        	
+	        	//statusText = "ANT not supported.";
 	        }
 	        catch (WFAntServiceNotInstalledException nie) {
 
@@ -130,14 +130,14 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 				finish();
 	        }
 			catch (WFAntException e) {
-				statusVisibility = TextView.VISIBLE;
-				statusText = "ANT initialization error.";
+				
+				//statusText = "ANT initialization error.";
 			}
        }
         else {
         	// ANT hardware not supported.
-        	statusVisibility = TextView.VISIBLE;
-        	statusText = "ANT not supported.";
+        	
+        	//statusText = "ANT not supported.";
         }
         
         if(!this.isFinishing())
@@ -222,10 +222,10 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	
 	public void initControls(){
 		
-		sensor1 = new CapteurWFFoot(getBaseContext());
+		sensor1 = new CapteurWFFoot();
 		sensor1.initControl(mHardwareConnector);
 		 
-		sensor2 = new CapteurWFBikeCadence(getBaseContext());
+		sensor2 = new CapteurWFBikeCadence();
 		sensor2.initControl(mHardwareConnector);
 	}
 	    
