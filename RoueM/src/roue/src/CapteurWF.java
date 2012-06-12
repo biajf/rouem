@@ -20,7 +20,8 @@ public class CapteurWF implements  WFSensorConnection.Callback {
 	
 	public CapteurWF()
 	{
-		mSensorType = WFSensorType.WF_SENSORTYPE_BIKE_CADENCE;
+		mHardwareConnector = null ;
+		mConnection = null ;
 	}
 	
 	public WFSensorConnectionStatus getState() {
@@ -96,5 +97,21 @@ public class CapteurWF implements  WFSensorConnection.Callback {
 			}
 		}
 	return retVal;
+	}
+	
+	public void initControl(WFHardwareConnector hwConn) {
+		mHardwareConnector = hwConn;
+	}
+	
+	public boolean restoreConnectionState() {
+		
+		WFSensorConnection[] connections = mHardwareConnector.getSensorConnections(mSensorType);
+		boolean retVal = (connections != null);
+		if (retVal) {
+			mConnection = connections[0];
+			mConnection.setCallback(this);
+		}
+		
+		return retVal;
 	}
 }
