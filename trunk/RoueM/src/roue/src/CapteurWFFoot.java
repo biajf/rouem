@@ -2,12 +2,9 @@ package roue.src;
 
 import android.content.Context;
 
-import com.wahoofitness.api.WFHardwareConnector;
+
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFSensorType;
-import com.wahoofitness.api.comm.WFBikeCadenceConnection;
-import com.wahoofitness.api.comm.WFBikeSpeedConnection;
 import com.wahoofitness.api.comm.WFFootpodConnection;
-import com.wahoofitness.api.data.WFBikeCadenceData;
 import com.wahoofitness.api.data.WFFootpodData;
 
 

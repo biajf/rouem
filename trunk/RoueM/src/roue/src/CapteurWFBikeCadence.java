@@ -6,15 +6,10 @@ import java.text.SimpleDateFormat;
 
 import android.content.Context;
 
-import com.wahoofitness.api.WFHardwareConnector;
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFSensorType;
-import com.wahoofitness.api.comm.WFBikeCadenceConnection;
 import com.wahoofitness.api.comm.WFBikeSpeedCadenceConnection;
-import com.wahoofitness.api.comm.WFBikeSpeedConnection;
-import com.wahoofitness.api.comm.WFFootpodConnection;
-import com.wahoofitness.api.data.WFBikeCadenceData;
 import com.wahoofitness.api.data.WFBikeSpeedCadenceData;
-import com.wahoofitness.api.data.WFFootpodData;
+
 
 
 
@@ -72,9 +67,9 @@ public class CapteurWFBikeCadence extends CapteurWF {
 				printValue(BikeSpeedCadenceData.CADENCE, "Cadence:  " + bscData.getFormattedCadence(true));
 				printValue(BikeSpeedCadenceData.ACCUM_CRANK_REVS, "Accum C Revs:  " + bscData.accumCrankRevolutions);
 				printValue(BikeSpeedCadenceData.ACCUM_CADENCE_TIME, "Accum C Time:  " + df.format(bscData.accumCadenceTime));
-				printValue(BikeSpeedCadenceData.ACCUM_WHEEL_REVS, "Accum W Revs:  " + bscData.accumWheelRevolutions);
-				printValue(BikeSpeedCadenceData.ACCUM_SPEED_TIME, "Accum S Time:  " + df.format(bscData.accumSpeedTime));
-				*/
+				printValue(BikeSpeedCadenceData.ACCUM_WHEEL_REVS, "Accum W Revs:  " + bscData.accumWheelRevolutions);*/
+				val = val + "Accum S Time:  " + df.format(bscData.accumSpeedTime);
+				
 				Date timestamp = new Date(bscData.speedTimestamp);
 				SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 				val = val+" Time:  " + timeFormatter.format(timestamp);
