@@ -17,14 +17,7 @@ public class CapteurWFFoot extends CapteurWF {
 	public CapteurWFFoot(Context context) {
 		super(context);
 		mSensorType = WFSensorType.WF_SENSORTYPE_FOOTPOD;
-		// TODO Auto-generated constructor stub
 	}
-
-	public enum BikeCadenceData {
-		DEVICE_ID,
-		CADENCE,
-	}
-	
 
 	public enum FootData {
 		DEVICE_ID,
@@ -56,11 +49,10 @@ public class CapteurWFFoot extends CapteurWF {
 			WFFootpodData fpData = footpodConnection.getFootpodData();
 			if (fpData != null) {
 				val = val + "Speed:  " + fpData.getFormattedSpeed(true);
-			/*	printValue(FootData.SPEED, "Speed:  " + fpData.getFormattedSpeed(true)); 
-				printValue(FootData.PACE, "Pace:  " + fpData.getFormattedPace(true)); 
-				printValue(FootData.DISTANCE, "Distance:  " + fpData.getFormattedDistance(true)); 
-				printValue(FootData.STRIDE_COUNT, "Strides:  " + fpData.accumulatedStride); 
-				printValue(FootData.CADENCE, "Cadence:  " + fpData.getFormattedCadence(true));*/
+			    val = val + "Pace:  " + fpData.getFormattedPace(true); 
+				val = val + "Distance:  " + fpData.getFormattedDistance(true); 
+				val = val + "Strides:  " + fpData.accumulatedStride; 
+				val = val + "Cadence:  " + fpData.getFormattedCadence(true);
 			}
 		}
 		return val;
