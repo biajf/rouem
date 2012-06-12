@@ -16,9 +16,6 @@ public class RoueMesureuse {
 	
 	public void initialiser(String sensor_service){
 		
-		sensor2 = new CapteurAndroid(sensor_service);
-		//sensor1 = new CapteurWF();
-		//sensor1.connectCapteur();
 		
 	}
 	
