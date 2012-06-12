@@ -16,9 +16,8 @@ import com.wahoofitness.api.WFDisplaySettings;
 import com.wahoofitness.api.WFHardwareConnector;
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFAntError;
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFHardwareState;
-import com.wahoofitness.api.comm.WFConnectionParams;
 import com.wahoofitness.api.comm.WFSensorConnection;
-import com.wahoofitness.api.comm.WFSensorConnection.WFSensorConnectionStatus;
+
 
 
 public class RoueMActivity extends Activity implements WFHardwareConnector.Callback {
