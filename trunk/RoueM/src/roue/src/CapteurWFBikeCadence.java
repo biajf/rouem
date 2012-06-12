@@ -15,8 +15,7 @@ import com.wahoofitness.api.data.WFBikeSpeedCadenceData;
 
 public class CapteurWFBikeCadence extends CapteurWF {
 
-	public CapteurWFBikeCadence(Context context) {
-		super(context);
+	public CapteurWFBikeCadence() {
 		mSensorType = WFSensorType.WF_SENSORTYPE_BIKE_SPEED_CADENCE;
 		// TODO Auto-generated constructor stub
 	}

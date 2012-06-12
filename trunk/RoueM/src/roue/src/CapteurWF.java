@@ -18,15 +18,11 @@ public class CapteurWF implements WFSensorConnection.Callback {
 	protected WFSensorConnection mConnection;
 	protected short mSensorType;
 	
-	public CapteurWF(Context context) {
-		//super(context);
-		//defaultSettings(context);
+	public CapteurWF() {
+
 	}
 
-	public CapteurWF(Context context, AttributeSet attrs) {
-		//super(context, attrs);
-		//defaultSettings(context);
-	}
+
 	
 	public WFSensorConnectionStatus getState() {
 		WFSensorConnectionStatus retVal = WFSensorConnectionStatus.WF_SENSOR_CONNECTION_STATUS_IDLE;
