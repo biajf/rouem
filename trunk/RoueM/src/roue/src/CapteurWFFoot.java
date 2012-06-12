@@ -12,9 +12,9 @@ import com.wahoofitness.api.data.WFFootpodData;
 
 
 
-public class CapteurWFBikeSpeed extends CapteurWF {
+public class CapteurWFFoot extends CapteurWF {
 
-	public CapteurWFBikeSpeed(Context context) {
+	public CapteurWFFoot(Context context) {
 		super(context);
 		mSensorType = WFSensorType.WF_SENSORTYPE_FOOTPOD;
 		// TODO Auto-generated constructor stub
@@ -44,16 +44,18 @@ public class CapteurWFBikeSpeed extends CapteurWF {
 		return retVal;
 	}
 	
-	public void updateDisplay() {
+	public String updateDisplay() {
 		
 		WFFootpodConnection footpodConnection = getFootpodConnection();
+		String val = null ;
 		if (footpodConnection != null && footpodConnection.isConnected()) {
 			// display connection info.
-			//printValue(FootData.DEVICE_ID, "Device ID:  " + footpodConnection.getDeviceNumber()); 
+			val = "Device ID:  " + footpodConnection.getDeviceNumber() ; 
 			
             // display standard SDM data.
 			WFFootpodData fpData = footpodConnection.getFootpodData();
 			if (fpData != null) {
+				val = val + "Speed:  " + fpData.getFormattedSpeed(true);
 			/*	printValue(FootData.SPEED, "Speed:  " + fpData.getFormattedSpeed(true)); 
 				printValue(FootData.PACE, "Pace:  " + fpData.getFormattedPace(true)); 
 				printValue(FootData.DISTANCE, "Distance:  " + fpData.getFormattedDistance(true)); 
@@ -61,5 +63,6 @@ public class CapteurWFBikeSpeed extends CapteurWF {
 				printValue(FootData.CADENCE, "Cadence:  " + fpData.getFormattedCadence(true));*/
 			}
 		}
+		return val;
 	}
 }
