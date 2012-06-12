@@ -17,6 +17,15 @@ public class CapteurWF implements  WFSensorConnection.Callback {
 	private WFConnectionParams connectParams;
 	private WFSensorConnection mConnection;
 	private WFHardwareConnector mHardwareConnector;
+	
+	public CapteurWF()
+	{
+		connectParams = null ;
+		mConnection = null ;
+		mHardwareConnector = null ;
+		
+	}
+	
 	public void connectionStateChanged(WFSensorConnectionStatus arg0) {
 		
 		
