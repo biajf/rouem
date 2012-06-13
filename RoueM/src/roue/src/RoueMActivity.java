@@ -35,13 +35,17 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	//float rayon;
 	private Bundle save;
 	
+	//Gestion de la pause
+	boolean pause;
+	float distancepause = 0;
+	
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.main);
 	        distance = (TextView)findViewById(R.id.distance1);
 	        save = savedInstanceState;
-	       
+	        pause = false;
 	        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 	        sensorManager.registerListener(boussole, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_NORMAL);  
 	        // check for ANT hardware support.
@@ -57,12 +61,29 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		 sensor1.disconnectSensor();
 		 sensor2.disconnectSensor();
 		 mHardwareConnector.destroy();
+		 distancepause = 0 ;
 	 }
 	 
 	 public void pause(View v){
-		 sensor1.disconnectSensor();
-		 sensor2.disconnectSensor();
-		 mHardwareConnector.destroy();
+		 if(pause)
+		 {
+			 //antConnect(getBaseContext(), save);
+			 //sensor2.connectSensor();
+			 pause = false ;
+			 String tmp = (sensor2.getDistance()).replaceAll(" km","");
+			 float distancesortie = Float.parseFloat(((String) tmp.subSequence(0,4)).replace(',','.'));
+			 distancepause = (distancesortie-distancepause);
+		 }
+		 else
+		 {
+			 String tmp = (sensor2.getDistance()).replaceAll(" km","");
+			 distancepause = Float.parseFloat(((String) tmp.subSequence(0,4)).replace(',','.'));
+			 //sensor1.disconnectSensor();
+			 //sensor2.disconnectSensor();
+			 //mHardwareConnector.destroy();
+			 pause = true;
+		 }
+		
 	 }
 	 
 
@@ -205,7 +226,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		Log.d(TAG, "hwConnHasData");
 		sensor1.connectSensor();
 		sensor2.connectSensor();
-		distance.setText(sensor2.getDistance());
+		distance.setText(distance(sensor2.getDistance()));
 		
 	}
 
@@ -256,5 +277,16 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		return (float) (2 * Math.PI * rayon) * sensor2.getRPM();
 				
 	}*/
+	
+	public String distance(String str)
+	{
+		if(str !="n/a")
+		{
+		String tmp = (sensor2.getDistance()).replaceAll(" km","");
+		distanceparcourue = Float.parseFloat(((String) tmp.subSequence(0,4)).replace(',','.')) - distancepause;
+		return Float.toString(distanceparcourue) ;
+		}
+		else return str;
+	}
 
 }
