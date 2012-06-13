@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
@@ -32,6 +33,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	SensorManager sensorManager;
 	float distanceparcourue = 0;
 	float angle = 0;
+	RadioGroup sens = null; 
 	//float rayon;
 	private Bundle save;
 	
@@ -44,6 +46,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.main);
 	        distance = (TextView)findViewById(R.id.distance1);
+	        sens = (RadioGroup)findViewById(R.id.radioGroup1);
 	        save = savedInstanceState;
 	        pause = false;
 	        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -96,7 +99,24 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 
 			public void onSensorChanged(SensorEvent arg0) {
 				// TODO Auto-generated method stub
-				angle = arg0.values[0];
+				if(angle == 0)
+					angle = arg0.values[0];
+				else
+					if(((arg0.values[0] - angle) > 45.0) && (arg0.values[0] - angle) < 135  ){
+						angle = arg0.values[0];
+						sens.check(R.id.est);
+					}					
+					else if(((arg0.values[0] - angle) < -45.0) && (arg0.values[0] - angle) > -135){
+						sens.check(R.id.ouest);
+						angle = arg0.values[0];
+					}					
+					else if(((arg0.values[0] - angle) < 45.0) && (arg0.values[0] - angle) > -45){
+						sens.check(R.id.nord);	
+					}								
+					else{
+						sens.check(R.id.sud);
+						angle = arg0.values[0];
+					}					
 			}
 
 	    };
