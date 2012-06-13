@@ -19,22 +19,19 @@ import com.wahoofitness.api.WFHardwareConnectorTypes.WFHardwareState;
 import com.wahoofitness.api.comm.WFSensorConnection;
 
 
-
 public class RoueMActivity extends Activity implements WFHardwareConnector.Callback {
 	private WFHardwareConnector mHardwareConnector;
 	private static final String TAG = "Test";
 	private CapteurWFFoot sensor1;
 	private CapteurWFBikeCadence sensor2;
-	private TextView foot;
-	private TextView bike;
+	private TextView distance;
 	private Bundle save;
 	
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.main);
-	        foot = (TextView)findViewById(R.id.textView1);
-	        bike = (TextView)findViewById(R.id.textView2);
+	        distance = (TextView)findViewById(R.id.distance1);
 	        save = savedInstanceState;
 	       
 	         
@@ -58,6 +55,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		 sensor2.disconnectSensor();
 		 mHardwareConnector.destroy();
 	 }
+	 
+	 
 	public void antConnect(Context context,Bundle savedInstanceState)
 	{
 		if (WFHardwareConnector.hasAntSupport(context)) {
@@ -183,9 +182,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		Log.d(TAG, "hwConnHasData");
 		sensor1.connectSensor();
 		sensor2.connectSensor();
-		foot.setText(sensor1.updateDisplay());
-		bike.setText(sensor2.updateDisplay());
-		
+		distance.setText(sensor1.updateDisplay());
 	}
 
 	public void hwConnStateChanged(WFHardwareState state) {

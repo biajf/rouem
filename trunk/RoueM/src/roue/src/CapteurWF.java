@@ -1,15 +1,9 @@
 package roue.src;
 
-
-import android.content.Context;
-import android.util.AttributeSet;
-
-
 import com.wahoofitness.api.WFHardwareConnector;
 import com.wahoofitness.api.comm.WFConnectionParams;
 import com.wahoofitness.api.comm.WFSensorConnection;
 import com.wahoofitness.api.comm.WFSensorConnection.WFSensorConnectionStatus;
-
 
 
 public class CapteurWF implements WFSensorConnection.Callback {
