@@ -61,7 +61,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 
 	 public void stop(View v)
 	 {
-		 sensor1.disconnectSensor();
+		 //sensor1.disconnectSensor();
 		 sensor2.disconnectSensor();
 		 mHardwareConnector.destroy();
 		 distancepause = 0 ;
@@ -244,7 +244,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	@Override
 	public void hwConnHasData() {
 		Log.d(TAG, "hwConnHasData");
-		sensor1.connectSensor();
+		//sensor1.connectSensor();
 		sensor2.connectSensor();
 		distance.setText(distance(sensor2.getDistance()));
 		
