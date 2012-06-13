@@ -47,6 +47,20 @@ public class CapteurWFBikeCadence extends CapteurWF {
 		return retVal;
 	}
 	
+	public String getDistance(){
+		
+		String distance = null ;
+		WFBikeSpeedCadenceConnection bscConnection = getBikeSpeedCadenceConnection();
+		if (bscConnection != null && bscConnection.isConnected()) {
+		WFBikeSpeedCadenceData bscData = bscConnection.getBikeSpeedCadenceData();
+		distance = bscData.getFormattedDistance(true);
+		}
+		else 
+		{
+			distance = "n/a";
+		}
+		return distance;
+	}
 	public String updateDisplay() {
 		
 		String val = null ;
@@ -62,11 +76,11 @@ public class CapteurWFBikeCadence extends CapteurWF {
 				val = val +" Speed:  " + bscData.getFormattedSpeed(true); 
 				val = val +" Dist:  " + bscData.getFormattedDistance(true); 
 				val = val+" Cadence:  " + bscData.getFormattedCadence(true);
-				/*
-				printValue(BikeSpeedCadenceData.CADENCE, "Cadence:  " + bscData.getFormattedCadence(true));
-				printValue(BikeSpeedCadenceData.ACCUM_CRANK_REVS, "Accum C Revs:  " + bscData.accumCrankRevolutions);
-				printValue(BikeSpeedCadenceData.ACCUM_CADENCE_TIME, "Accum C Time:  " + df.format(bscData.accumCadenceTime));
-				printValue(BikeSpeedCadenceData.ACCUM_WHEEL_REVS, "Accum W Revs:  " + bscData.accumWheelRevolutions);*/
+				
+				val = val + "Cadence:  " + bscData.getFormattedCadence(true);
+				/*printValue(BikeSpeedCadenceData.ACCUM_CRANK_REVS, "Accum C Revs:  " + bscData.accumCrankRevolutions);
+				printValue(BikeSpeedCadenceData.ACCUM_CADENCE_TIME, "Accum C Time:  " + df.format(bscData.accumCadenceTime);*/
+				val = val + "Accum W Revs:  " + bscData.accumWheelRevolutions;
 				val = val + "Accum S Time:  " + df.format(bscData.accumSpeedTime);
 				
 				Date timestamp = new Date(bscData.speedTimestamp);
