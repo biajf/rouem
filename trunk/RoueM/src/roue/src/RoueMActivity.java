@@ -3,6 +3,10 @@ package roue.src;
 
 import android.app.Activity;
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +29,9 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	private CapteurWFFoot sensor1;
 	private CapteurWFBikeCadence sensor2;
 	private TextView distance;
+	SensorManager sensorManager;
 	float distanceparcourue = 0;
+	float angle = 0;
 	//float rayon;
 	private Bundle save;
 	
@@ -36,7 +42,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        distance = (TextView)findViewById(R.id.distance1);
 	        save = savedInstanceState;
 	       
-	         
+	        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+	        sensorManager.registerListener(boussole, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_NORMAL);  
 	        // check for ANT hardware support.
 	        //antConnect(context, savedInstanceState);
 	   }
@@ -58,6 +65,20 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		 mHardwareConnector.destroy();
 	 }
 	 
+
+	    public SensorEventListener boussole = new SensorEventListener(){
+
+			public void onAccuracyChanged(Sensor arg0, int arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onSensorChanged(SensorEvent arg0) {
+				// TODO Auto-generated method stub
+				angle = arg0.values[0];
+			}
+
+	    };
 	 
 	public void antConnect(Context context,Bundle savedInstanceState)
 	{
