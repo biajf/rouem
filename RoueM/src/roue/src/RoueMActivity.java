@@ -39,7 +39,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	RadioGroup sens = null; 
 	//float rayon;
 	private Bundle save;
-	
+	String mesure ="" ;
 	//Gestion de la pause
 	boolean pause;
 	float distancepause = 0;
@@ -70,7 +70,13 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		 sensor2.disconnectSensor();
 		 mHardwareConnector.destroy();
 		 distancepause = 0 ;
-		 distance.setText(resultat.get(1).toString());
+		 resultat.add(mesure);
+		 String tmp = null ;
+		 tmp = resultat.get(0).toString();
+		 distance.setText(tmp);
+		 mesure = "" ;
+		 //distance.setText(resultat.get(1).toString());
+		 
 		 
 	 }
 	 
@@ -255,7 +261,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		Log.d(TAG, "hwConnHasData");
 		//sensor1.connectSensor();
 		sensor2.connectSensor();
-		distance.setText(distance(sensor2.getDistance()));
+		distance.setText(mesure + "\n Distance courante :"+ distance(sensor2.getDistance()));
 		
 	}
 
@@ -324,17 +330,17 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		if(direction == "Droite")
 		{
 		 tmp = distance(sensor2.getDistance());
-		 resultat.add(tmp+"\n"+"Droite");
+		 mesure = mesure + tmp+"\n"+"Droite\n";
 		}
 		else if(direction == "Gauche")
 		{
 		tmp = distance(sensor2.getDistance());
-		resultat.add(tmp+"\n"+"Gauche");	
+		 mesure = mesure + tmp+"\n"+"Gauche\n";	
 		}
 		else
 		{
 		tmp = distance(sensor2.getDistance());
-		resultat.add(tmp+"\n"+"Droit");
+		mesure = mesure +tmp+"\n"+"Droit\n";
 		}
 	}
 }
