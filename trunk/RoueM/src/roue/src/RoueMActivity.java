@@ -1,6 +1,9 @@
 package roue.src;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -41,6 +44,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	boolean pause;
 	float distancepause = 0;
 	
+	// Enregistrement
+	List resultat = new ArrayList<String>() ;
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
@@ -65,6 +70,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		 sensor2.disconnectSensor();
 		 mHardwareConnector.destroy();
 		 distancepause = 0 ;
+		 distance.setText(resultat.get(1).toString());
+		 
 	 }
 	 
 	 public void pause(View v){
@@ -105,10 +112,12 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 					if(((arg0.values[0] - angle) > 45.0) && (arg0.values[0] - angle) < 135  ){
 						angle = arg0.values[0];
 						sens.check(R.id.est);
+						directionChange("Gauche");
 					}					
 					else if(((arg0.values[0] - angle) < -45.0) && (arg0.values[0] - angle) > -135){
 						sens.check(R.id.ouest);
 						angle = arg0.values[0];
+						directionChange("Droite");
 					}					
 					else if(((arg0.values[0] - angle) < 45.0) && (arg0.values[0] - angle) > -45){
 						sens.check(R.id.nord);	
@@ -308,5 +317,24 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		}
 		else return str;
 	}
-
+	
+	public void directionChange(String direction)
+	{
+		String tmp = null ;
+		if(direction == "Droite")
+		{
+		 tmp = distance(sensor2.getDistance());
+		 resultat.add(tmp+"\n"+"Droite");
+		}
+		else if(direction == "Gauche")
+		{
+		tmp = distance(sensor2.getDistance());
+		resultat.add(tmp+"\n"+"Gauche");	
+		}
+		else
+		{
+		tmp = distance(sensor2.getDistance());
+		resultat.add(tmp+"\n"+"Droit");
+		}
+	}
 }
