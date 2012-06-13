@@ -264,8 +264,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	
 	public void initControls(){
 		
-		sensor1 = new CapteurWFFoot();
-		sensor1.initControl(mHardwareConnector);
+		//sensor1 = new CapteurWFFoot();
+		//sensor1.initControl(mHardwareConnector);
 		 
 		sensor2 = new CapteurWFBikeCadence();
 		sensor2.initControl(mHardwareConnector);
