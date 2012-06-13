@@ -5,24 +5,27 @@
     android:baselineAligned="false"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/distance1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Distance"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <EditText
-        android:id="@+id/distance"
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:enabled="false"
-        android:ems="10"
-        android:text="Distance"
-        android:inputType="numberDecimal" />
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="211dp"
+            android:layout_marginTop="30dp" >
+
+            <TextView
+                android:id="@+id/distance1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Distance"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <RadioGroup
         android:id="@+id/radioGroup1"
