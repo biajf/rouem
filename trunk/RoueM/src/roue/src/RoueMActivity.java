@@ -25,6 +25,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	private CapteurWFFoot sensor1;
 	private CapteurWFBikeCadence sensor2;
 	private TextView distance;
+	float distanceparcourue = 0;
+	//float rayon;
 	private Bundle save;
 	
 	 @Override
@@ -182,7 +184,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		Log.d(TAG, "hwConnHasData");
 		sensor1.connectSensor();
 		sensor2.connectSensor();
-		distance.setText(sensor1.updateDisplay());
+		distance.setText(sensor2.getDistance());
+		
 	}
 
 	public void hwConnStateChanged(WFHardwareState state) {
@@ -225,6 +228,12 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		sensor2 = new CapteurWFBikeCadence();
 		sensor2.initControl(mHardwareConnector);
 	}
-	    
+	  
+	/*public float distance(float rayon){
+		//distanceparcourue = distanceparcourue + (float) (2 * Math.PI * rayon) * sensor2.getRPM();
+		
+		return (float) (2 * Math.PI * rayon) * sensor2.getRPM();
+				
+	}*/
 
 }
