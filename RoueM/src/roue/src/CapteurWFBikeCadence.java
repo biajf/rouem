@@ -47,19 +47,19 @@ public class CapteurWFBikeCadence extends CapteurWF {
 		return retVal;
 	}
 	
-	public String getDistance(){
+	public long getTour(){
 		
-		String distance = null ;
+		long tour = 0 ;
 		WFBikeSpeedCadenceConnection bscConnection = getBikeSpeedCadenceConnection();
 		if (bscConnection != null && bscConnection.isConnected()) {
 		WFBikeSpeedCadenceData bscData = bscConnection.getBikeSpeedCadenceData();
-		distance = bscData.getFormattedDistance(true);
+		tour = bscData.accumWheelRevolutions;
 		}
 		else 
 		{
-			distance = "n/a";
+			tour = -1;
 		}
-		return distance;
+		return tour;
 	}
 	public String updateDisplay() {
 		
