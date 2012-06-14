@@ -12,9 +12,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Criteria;
 import android.os.Bundle;
-import android.provider.Contacts.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -65,11 +63,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        sens = (RadioGroup)findViewById(R.id.radioGroup1);
 	        save = savedInstanceState;
 	        pause = false;
-	        //sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-	        //sensorManager.registerListener(gyroscope, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);  
-	        // check for ANT hardware support.
-	        //antConnect(context, savedInstanceState);
-	   }
+
+	 }
 	 
 	 public void start(View v){
 		 sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -83,7 +78,6 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 {
 		 if(appstart)
 		 {
-		 //sensor1.disconnectSensor();
 		 mesure += distance(sensor2.getTour())+"m\n" ;
 		 sensor2.disconnectSensor();
 		 mHardwareConnector.destroy();
@@ -171,7 +165,6 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 				}								
 				else{
 					sens.check(R.id.nord);
-					//directionChange("Droit", true);
 					pris_en_compte = true;
 				}				
 			}
@@ -234,7 +227,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        catch (WFAntNotSupportedException nse) {
 	        	// ANT hardware not supported.
 	        	
-	        	//statusText = "ANT not supported.";
+	        	alert("ANT not supported.");
 	        }
 	        catch (WFAntServiceNotInstalledException nie) {
 
@@ -251,13 +244,13 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        }
 			catch (WFAntException e) {
 				
-				//statusText = "ANT initialization error.";
+				alert( "ANT initialization error.");
 			}
        }
         else {
         	// ANT hardware not supported.
         	
-        	//statusText = "ANT not supported.";
+        	alert("ANT not supported.");
         }
         
         if(!this.isFinishing())
@@ -377,5 +370,18 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 			}
 		}
 		
+	}
+	
+	public void alert(String msg)
+	{
+		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+		alertDialog.setTitle("Erreur");
+		alertDialog.setMessage(msg);
+		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+		   public void onClick(DialogInterface dialog, int which) {
+		      // here you can add functions
+		   }
+		});
+		alertDialog.show();
 	}
 }
