@@ -63,7 +63,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        sens = (RadioGroup)findViewById(R.id.radioGroup1);
 	        save = savedInstanceState;
 	        pause = false;
-	        if(WFHardwareConnector.hasAntSupport(getBaseContext()))
+	        if(!WFHardwareConnector.hasAntSupport(getBaseContext()))
 	        {
 	        	alert("ANT not supported.");
 	        }
