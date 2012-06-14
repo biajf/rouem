@@ -37,6 +37,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	private CapteurWFBikeCadence sensor2;
 	private TextView resultataff;
 	private TextView distance;
+	private boolean pris_en_compte=true;
 	SensorManager sensorManager;
 	float distanceparcourue = 0;
 	float angle = 0;
@@ -65,7 +66,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        save = savedInstanceState;
 	        pause = false;
 	        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-	        sensorManager.registerListener(boussole, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_NORMAL);  
+	        sensorManager.registerListener(gyroscope, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);  
 	        // check for ANT hardware support.
 	        //antConnect(context, savedInstanceState);
 	   }
@@ -145,7 +146,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		 
 	 }
 
-	    public SensorEventListener boussole = new SensorEventListener(){
+	    public SensorEventListener gyroscope = new SensorEventListener(){
 
 			public void onAccuracyChanged(Sensor arg0, int arg1) {
 				// TODO Auto-generated method stub
@@ -154,26 +155,23 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 
 			public void onSensorChanged(SensorEvent arg0) {
 				// TODO Auto-generated method stub
-				if(angle == 0)
-					angle = arg0.values[0];
-				else
-					if(((arg0.values[0] - angle) > 45.0) && (arg0.values[0] - angle) < 135  ){
-						angle = arg0.values[0];
-						sens.check(R.id.est);
-						directionChange("Gauche");
-					}					
-					else if(((arg0.values[0] - angle) < -45.0) && (arg0.values[0] - angle) > -135){
-						sens.check(R.id.ouest);
-						angle = arg0.values[0];
-						directionChange("Droite");
-					}					
-					else if(((arg0.values[0] - angle) < 45.0) && (arg0.values[0] - angle) > -45){
-						sens.check(R.id.nord);	
-					}								
-					else{
-						sens.check(R.id.sud);
-						angle = arg0.values[0];
-					}					
+		    	float degree = arg0.values[2];
+
+		    	if(degree > 2){
+					sens.check(R.id.ouest);	
+					directionChange("Droite", pris_en_compte);
+					pris_en_compte = false;
+				}					
+				else if(degree < -2){
+					sens.check(R.id.est);
+					directionChange("Gauche", pris_en_compte);
+					pris_en_compte = false;
+				}								
+				else{
+					sens.check(R.id.nord);
+					directionChange("Droit", true);
+					pris_en_compte = true;
+				}				
 			}
 
 	    };
@@ -359,20 +357,23 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		else return 0;
 	}
 	
-	public void directionChange(String direction)
+	public void directionChange(String direction, boolean pris_en_compte)
 	{
-		float tmp = distance(sensor2.getTour()) ;
-		if(direction == "Droite")
-		{
-		 mesure += "\t"+tmp+"m\n"+"	Droite\n";
+		if(pris_en_compte){
+			float tmp = distance(sensor2.getTour()) ;
+			if(direction == "Droite")
+			{
+			 mesure += "\t"+tmp+"m\n"+"	Droite\n";
+			}
+			else if(direction == "	Gauche")
+			{
+			 mesure += "\t"+tmp+"m\n"+"	Gauche\n";	
+			}
+			else
+			{
+			mesure += "\t"+tmp+"m\n"+"	Droit\n";
+			}
 		}
-		else if(direction == "	Gauche")
-		{
-		 mesure += "\t"+tmp+"m\n"+"	Gauche\n";	
-		}
-		else
-		{
-		mesure += "\t"+tmp+"m\n"+"	Droit\n";
-		}
+		
 	}
 }
