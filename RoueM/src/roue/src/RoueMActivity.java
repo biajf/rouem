@@ -15,7 +15,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 
@@ -30,23 +32,33 @@ import com.wahoofitness.api.comm.WFSensorConnection;
 
 
 public class RoueMActivity extends Activity implements WFHardwareConnector.Callback {
+	
+	private Bundle save;
+	
+	//Variables Graphiques
+	private TextView resultataff;
+	private TextView distance;
+	private Button bstart, bpause, breset, bstop = null;
+	private RadioGroup sens = null; 
+	
+	//Variables Capteurs
 	private WFHardwareConnector mHardwareConnector;
 	private static final String TAG = "Test";
 	private CapteurWFBikeCadence sensor2;
-	private TextView resultataff;
-	private TextView distance;
+	private SensorManager sensorManager;
+	
+	//Variables de Mesures
 	private boolean pris_en_compte=true;
-	SensorManager sensorManager;
 	float distanceparcourue = 0;
-	float angle = 0;
-	RadioGroup sens = null; 
-	private Bundle save;
+	float angle = 0;	
 	String mesure ="" ;
+	
 	//Gestion de la pause et stop
 	boolean appstart = false;
 	boolean pause;
 	float distancepause = 0;
 	long tourpause;
+
 	// Enregistrement résultat 
 	List resultat = new ArrayList<String>() ;
 	
@@ -58,14 +70,26 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.main);
+	        
 	        resultataff = (TextView)findViewById(R.id.resultat);
 	        distance = (TextView)findViewById(R.id.distance);
+	        bstart = (Button)findViewById(R.id.start);
+	        bpause = (Button)findViewById(R.id.pause);
+	        breset = (Button)findViewById(R.id.reset);
+	        bstop = (Button)findViewById(R.id.stop);
 	        sens = (RadioGroup)findViewById(R.id.radioGroup1);
+	        
 	        save = savedInstanceState;
+	        
 	        pause = false;
+	        
 	        if(!WFHardwareConnector.hasAntSupport(getBaseContext()))
 	        {
 	        	alert("ANT not supported.");
+	        	bstart.setEnabled(false);
+	        	bpause.setEnabled(false);
+	        	bstop.setEnabled(false);
+	        	breset.setEnabled(false);
 	        }
 
 	 }
