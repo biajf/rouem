@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -32,17 +34,17 @@ import com.wahoofitness.api.comm.WFSensorConnection;
 public class RoueMActivity extends Activity implements WFHardwareConnector.Callback {
 	private WFHardwareConnector mHardwareConnector;
 	private static final String TAG = "Test";
-	private CapteurWFFoot sensor1;
 	private CapteurWFBikeCadence sensor2;
+	private TextView resultataff;
 	private TextView distance;
 	SensorManager sensorManager;
 	float distanceparcourue = 0;
 	float angle = 0;
 	RadioGroup sens = null; 
-	//float rayon;
 	private Bundle save;
 	String mesure ="" ;
-	//Gestion de la pause
+	//Gestion de la pause et stop
+	boolean appstart = false;
 	boolean pause;
 	float distancepause = 0;
 	long tourpause;
@@ -51,11 +53,14 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	
 	// Calibration 
 	private float circonference = (float) 1.3 ;
+	
+	
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.main);
-	        distance = (TextView)findViewById(R.id.distance1);
+	        resultataff = (TextView)findViewById(R.id.resultat);
+	        distance = (TextView)findViewById(R.id.distance);
 	        sens = (RadioGroup)findViewById(R.id.radioGroup1);
 	        save = savedInstanceState;
 	        pause = false;
@@ -67,10 +72,14 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 
 	 public void start(View v){
 		 antConnect(getBaseContext(), save);
+		 resultataff.setText("");
+		 appstart = true ;
 	 }
 	 
 	 public void stop(View v)
 	 {
+		 if(appstart)
+		 {
 		 //sensor1.disconnectSensor();
 		 mesure += distance(sensor2.getTour())+"m\n" ;
 		 sensor2.disconnectSensor();
@@ -82,29 +91,59 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		 {
 		 tmp += "Mesure "+i + " :\n" +"\t"+resultat.get(i).toString();
 		 }
-		 distance.setText(tmp);
+		 distance.setText("Appuyer sur Start");
+		 resultataff.setText(tmp);
 		 mesure = "" ;
-		 //distance.setText(resultat.get(1).toString());
-		 
+		 }
 		 
 	 }
 	 
 	 public void pause(View v){
 		 
-		if(pause)
-		 {
-			 pause = false ;
-			 long toursortie = sensor2.getTour();
-			 distancepause = distance(toursortie-tourpause);
-		 }
-		 else
-		 {
-			 tourpause = sensor2.getTour();
-			 pause = true;
-		 }
-		
+		if(appstart){
+			if(pause)
+			 {
+				 pause = false ;
+				 long toursortie = sensor2.getTour();
+				 distancepause = distance(toursortie-tourpause);
+			 }
+			 else
+			 {
+				 tourpause = sensor2.getTour();
+				 pause = true;
+			 }
+		}
 	 }
 	 
+	 public void reset(View v){
+		
+		 if(appstart)
+		 {
+			 AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			 builder.setMessage("Voulez-vous supprimer l'ensemble des données ?")
+			        .setCancelable(false)
+			        .setPositiveButton("Oui je le veux", new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int id) {
+			            	sensor2.disconnectSensor();
+			       		 	mHardwareConnector.destroy();
+			       		 	distancepause = 0 ;
+			       		 	resultat.clear();
+			       		 	distance.setText("Appuyer sur Start");
+			       		 	resultataff.setText("");
+			       		 	mesure = "" ;
+			                RoueMActivity.this.getApplication();
+			            }
+			        })
+			        .setNegativeButton("Non", new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int id) {
+			                 dialog.cancel();
+			            }
+			        });
+			 AlertDialog alert = builder.create();
+			 alert.show();
+		 }
+		 
+	 }
 
 	    public SensorEventListener boussole = new SensorEventListener(){
 
@@ -264,7 +303,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		Log.d(TAG, "hwConnHasData");
 		//sensor1.connectSensor();
 		sensor2.connectSensor();
-		distance.setText(mesure + "\n Distance courante :"+ distance(sensor2.getTour()));
+		distance.setText("Distance courante :"+ distance(sensor2.getTour())+"m\n");
+		resultataff.setText(mesure);
 		
 	}
 
