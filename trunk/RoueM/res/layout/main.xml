@@ -4,8 +4,7 @@
     android:layout_height="fill_parent"
     android:baselineAligned="false"
     android:orientation="vertical" >
-
-    <TextView
+    <TextView
         android:id="@+id/distance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -82,7 +81,8 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:id="@+id/bouttons" >
 
         <TableRow
             android:id="@+id/tableRow1"
