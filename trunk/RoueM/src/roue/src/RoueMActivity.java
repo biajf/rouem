@@ -10,7 +10,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Criteria;
 import android.os.Bundle;
+import android.provider.Contacts.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -43,9 +45,12 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	//Gestion de la pause
 	boolean pause;
 	float distancepause = 0;
-	
-	// Enregistrement
+	long tourpause;
+	// Enregistrement résultat 
 	List resultat = new ArrayList<String>() ;
+	
+	// Calibration 
+	private float circonference = (float) 1.3 ;
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
@@ -67,12 +72,16 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 public void stop(View v)
 	 {
 		 //sensor1.disconnectSensor();
+		 mesure += distance(sensor2.getTour())+"m\n" ;
 		 sensor2.disconnectSensor();
 		 mHardwareConnector.destroy();
 		 distancepause = 0 ;
 		 resultat.add(mesure);
-		 String tmp = null ;
-		 tmp = resultat.get(0).toString();
+		 String tmp = "" ;
+		 for(int i=0; i<resultat.size(); i++)
+		 {
+		 tmp += "Mesure "+i + " :\n" +"\t"+resultat.get(i).toString();
+		 }
 		 distance.setText(tmp);
 		 mesure = "" ;
 		 //distance.setText(resultat.get(1).toString());
@@ -81,22 +90,16 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 }
 	 
 	 public void pause(View v){
-		 if(pause)
+		 
+		if(pause)
 		 {
-			 //antConnect(getBaseContext(), save);
-			 //sensor2.connectSensor();
 			 pause = false ;
-			 String tmp = (sensor2.getDistance()).replaceAll(" km","");
-			 float distancesortie = Float.parseFloat(((String) tmp.subSequence(0,4)).replace(',','.'));
-			 distancepause = (distancesortie-distancepause);
+			 long toursortie = sensor2.getTour();
+			 distancepause = distance(toursortie-tourpause);
 		 }
 		 else
 		 {
-			 String tmp = (sensor2.getDistance()).replaceAll(" km","");
-			 distancepause = Float.parseFloat(((String) tmp.subSequence(0,4)).replace(',','.'));
-			 //sensor1.disconnectSensor();
-			 //sensor2.disconnectSensor();
-			 //mHardwareConnector.destroy();
+			 tourpause = sensor2.getTour();
 			 pause = true;
 		 }
 		
@@ -261,7 +264,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		Log.d(TAG, "hwConnHasData");
 		//sensor1.connectSensor();
 		sensor2.connectSensor();
-		distance.setText(mesure + "\n Distance courante :"+ distance(sensor2.getDistance()));
+		distance.setText(mesure + "\n Distance courante :"+ distance(sensor2.getTour()));
 		
 	}
 
@@ -306,41 +309,30 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		sensor2.initControl(mHardwareConnector);
 	}
 	  
-	/*public float distance(float rayon){
-		//distanceparcourue = distanceparcourue + (float) (2 * Math.PI * rayon) * sensor2.getRPM();
-		
-		return (float) (2 * Math.PI * rayon) * sensor2.getRPM();
-				
-	}*/
 	
-	public String distance(String str)
+	public float distance(long tour)
 	{
-		if(str !="n/a")
+		if(tour != -1)
 		{
-		String tmp = (sensor2.getDistance()).replaceAll(" km","");
-		distanceparcourue = Float.parseFloat(((String) tmp.subSequence(0,4)).replace(',','.')) - distancepause;
-		return Float.toString(distanceparcourue) ;
+		return tour*circonference - distancepause;
 		}
-		else return str;
+		else return 0;
 	}
 	
 	public void directionChange(String direction)
 	{
-		String tmp = null ;
+		float tmp = distance(sensor2.getTour()) ;
 		if(direction == "Droite")
 		{
-		 tmp = distance(sensor2.getDistance());
-		 mesure = mesure + tmp+"\n"+"Droite\n";
+		 mesure += "\t"+tmp+"m\n"+"	Droite\n";
 		}
-		else if(direction == "Gauche")
+		else if(direction == "	Gauche")
 		{
-		tmp = distance(sensor2.getDistance());
-		 mesure = mesure + tmp+"\n"+"Gauche\n";	
+		 mesure += "\t"+tmp+"m\n"+"	Gauche\n";	
 		}
 		else
 		{
-		tmp = distance(sensor2.getDistance());
-		mesure = mesure +tmp+"\n"+"Droit\n";
+		mesure += "\t"+tmp+"m\n"+"	Droit\n";
 		}
 	}
 }
