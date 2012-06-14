@@ -83,13 +83,15 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        
 	        pause = false;
 	        
-	        if(!WFHardwareConnector.hasAntSupport(getBaseContext()))
+	        //Verrouillage des bouttons avant le lancement d'une mesure 
+        	bpause.setEnabled(false);
+        	bstop.setEnabled(false);
+        	breset.setEnabled(false);
+	        
+        	if(!WFHardwareConnector.hasAntSupport(getBaseContext()))
 	        {
 	        	alert("ANT not supported.");
 	        	bstart.setEnabled(false);
-	        	bpause.setEnabled(false);
-	        	bstop.setEnabled(false);
-	        	breset.setEnabled(false);
 	        }
 
 	 }
