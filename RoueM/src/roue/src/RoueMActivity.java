@@ -65,13 +65,15 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        sens = (RadioGroup)findViewById(R.id.radioGroup1);
 	        save = savedInstanceState;
 	        pause = false;
-	        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-	        sensorManager.registerListener(gyroscope, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);  
+	        //sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+	        //sensorManager.registerListener(gyroscope, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);  
 	        // check for ANT hardware support.
 	        //antConnect(context, savedInstanceState);
 	   }
 	 
 	 public void start(View v){
+		 sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+	     sensorManager.registerListener(gyroscope, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);  
 		 antConnect(getBaseContext(), save);
 		 resultataff.setText("");
 		 appstart = true ;
@@ -169,7 +171,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 				}								
 				else{
 					sens.check(R.id.nord);
-					directionChange("Droit", true);
+					//directionChange("Droit", true);
 					pris_en_compte = true;
 				}				
 			}
@@ -365,13 +367,13 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 			{
 			 mesure += "\t"+tmp+"m\n"+"	Droite\n";
 			}
-			else if(direction == "	Gauche")
+			else if(direction == "Gauche")
 			{
 			 mesure += "\t"+tmp+"m\n"+"	Gauche\n";	
 			}
 			else
 			{
-			mesure += "\t"+tmp+"m\n"+"	Droit\n";
+			mesure += tmp+"m\n";
 			}
 		}
 		
