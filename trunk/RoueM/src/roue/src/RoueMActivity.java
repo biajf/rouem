@@ -13,9 +13,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -63,8 +65,12 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	List resultat = new ArrayList<String>() ;
 	
 	// Calibration 
-	private float circonference = (float) 1.3 ;
 	
+	//Debug
+	String cir ="0" ;
+	private float circonference = 0 ;
+	
+
 	
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +99,34 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	        	alert("ANT not supported.");
 	        	bstart.setEnabled(false);
 	        }
+        	
+        	//Debug
+        	AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
+        	alert.setTitle("Calibration");
+        	alert.setMessage("Circonference de la roue");
+
+        	// Set an EditText view to get user input 
+        	final EditText input = new EditText(this);
+        	
+        	alert.setView(input);
+
+        	alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        	public void onClick(DialogInterface dialog, int whichButton) {
+        	  Editable value = input.getText();
+        	  
+        	  // Do something with value!
+        	  circonference = Float.parseFloat(value.toString());
+        	  }
+        	});
+
+        	alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        	  public void onClick(DialogInterface dialog, int whichButton) {
+        	    // Canceled.
+        	  }
+        	});
+
+        	alert.show();
 	 }
 	 
 	 public void start(View v){
