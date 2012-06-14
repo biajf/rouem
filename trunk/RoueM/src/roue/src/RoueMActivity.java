@@ -97,6 +97,9 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 }
 	 
 	 public void start(View v){
+     	
+		changedBoutton(false, true, true, true);
+     	
 		 sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 	     sensorManager.registerListener(gyroscope, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);  
 		 antConnect(getBaseContext(), save);
@@ -106,6 +109,8 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 
 	 public void stop(View v)
 	 {
+		changedBoutton(true, false, false, true);
+	     	
 		 if(appstart)
 		 {
 		 mesure += distance(sensor2.getTour())+"m\n" ;
@@ -143,7 +148,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	 }
 	 
 	 public void reset(View v){
-		
+					
 		 if(appstart)
 		 {
 			 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -158,6 +163,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 			       		 	distance.setText("Appuyer sur Start");
 			       		 	resultataff.setText("");
 			       		 	mesure = "" ;
+			       		 	changedBoutton(true, false, false, false);
 			                RoueMActivity.this.getApplication();
 			            }
 			        })
@@ -413,5 +419,12 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 		   }
 		});
 		alertDialog.show();
+	}
+	
+	private void changedBoutton(boolean start, boolean stop, boolean pause, boolean reset){
+		bpause.setEnabled(pause);
+     	bstop.setEnabled(stop);
+     	breset.setEnabled(reset);
+     	bstart.setEnabled(start);
 	}
 }
