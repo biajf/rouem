@@ -161,12 +161,12 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 
 		    	if(degree > 2){
 					sens.check(R.id.ouest);	
-					directionChange("Droite", pris_en_compte);
+					directionChange("Gauche", pris_en_compte);
 					pris_en_compte = false;
 				}					
 				else if(degree < -2){
 					sens.check(R.id.est);
-					directionChange("Gauche", pris_en_compte);
+					directionChange("Droite", pris_en_compte);
 					pris_en_compte = false;
 				}								
 				else{
@@ -361,7 +361,7 @@ public class RoueMActivity extends Activity implements WFHardwareConnector.Callb
 	
 	public void directionChange(String direction, boolean pris_en_compte)
 	{
-		if(pris_en_compte){
+		if(pris_en_compte &! pause){
 			float tmp = distance(sensor2.getTour()) ;
 			if(direction == "Droite")
 			{
