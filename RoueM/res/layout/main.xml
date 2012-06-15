@@ -27,61 +27,19 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </ScrollView>
-
-    <RadioGroup
-        android:id="@+id/radioGroup1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical" >
-
-        <RadioButton
-            android:id="@+id/nord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:enabled="false"
-            android:text="Nord" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <RadioButton
-                android:id="@+id/ouest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="52dp"
-                android:enabled="false"
-                android:text="Ouest" />
-
-            <RadioButton
-                android:id="@+id/est"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="64dp"
-                
-                android:enabled="false"
-                android:text="Est" />
-        </RelativeLayout>
-
-        <RadioButton
-            android:id="@+id/sud"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:enabled="false"
-            android:text="Sud" />
-    </RadioGroup>
+    
+     <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="88dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/fleche" />
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:id="@+id/bouttons" >
 
         <TableRow
