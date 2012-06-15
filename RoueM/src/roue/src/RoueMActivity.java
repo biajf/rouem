@@ -2,11 +2,19 @@ package roue.src;
 
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class RoueMActivity extends Activity {
@@ -18,6 +26,7 @@ public class RoueMActivity extends Activity {
 	private TextView distance;
 	private Button bstart, bpause, breset, bstop = null;
 	private RadioGroup sens = null; 
+	private ImageView image = null;
 	
 	//Gestion de la pause et stop
 	boolean appstart = false;
@@ -37,7 +46,8 @@ public class RoueMActivity extends Activity {
 	        bpause = (Button)findViewById(R.id.pause);
 	        breset = (Button)findViewById(R.id.reset);
 	        bstop = (Button)findViewById(R.id.stop);
-	        sens = (RadioGroup)findViewById(R.id.radioGroup1);
+	        image = (ImageView)findViewById(R.id.imageView2);
+	        //sens = (RadioGroup)findViewById(R.id.radioGroup1);
 
 	        // Version avec Roue Mesureuse
 	        
@@ -76,7 +86,7 @@ public class RoueMActivity extends Activity {
 					
 		 if(appstart)
 		 {
-			 roue.reset(this);
+			 roue.reset();
 		 }
 		 
 	 }
@@ -87,4 +97,48 @@ public class RoueMActivity extends Activity {
      	breset.setEnabled(reset);
      	bstart.setEnabled(start);
 	}
+	
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	 
+        //Création d'un MenuInflater qui va permettre d'instancier un Menu XML en un objet Menu
+        MenuInflater inflater = getMenuInflater();
+        //Instanciation du menu XML spécifier en un objet Menu
+        inflater.inflate(R.layout.menu, menu);
+ 
+        //Il n'est pas possible de modifier l'icône d'entête du sous-menu via le fichier XML on le fait donc en JAVA
+    	//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.option_white);
+ 
+        return true;
+     }
+	
+	 public boolean onOptionsItemSelected(MenuItem item) {
+         //On regarde quel item a été cliqué grâce à son id et on déclenche une action
+         switch (item.getItemId()) {
+            case R.id.option:
+               Toast.makeText(this, "Option", Toast.LENGTH_SHORT).show();
+               return true;
+            case R.id.favoris:
+                Toast.makeText(this, "Favoris", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.stats:
+                Toast.makeText(this, "Stats", Toast.LENGTH_SHORT).show();
+                return true;
+           case R.id.quitter:
+               //Pour fermer l'application il suffit de faire finish()
+               finish();
+               return true;
+         }
+         return false;
+	 }
+	 
+		public void rotation(int rotat){
+			//Creation d'une nouvelle image que l'on tournera par la matrice
+			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fleche);
+		    Matrix mat = new Matrix();
+		    mat.postRotate(rotat);
+
+		    Bitmap bitmapRotate = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), mat, true);
+		    image.setImageBitmap(bitmapRotate);
+		    
+		}
 }
