@@ -60,11 +60,11 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	long tourpause;
 	
 	//Activite 
-	private Activity activity;
+	private RoueMActivity activity;
 	private Bundle save;
 	
 	
-	public RoueMesureuse(Activity act,Bundle saved,RadioGroup sen,TextView resultattext,TextView distancetext) {
+	public RoueMesureuse(RoueMActivity act,Bundle saved,RadioGroup sen,TextView resultattext,TextView distancetext) {
 		activity = act ;
 		save = saved ;
 		sens = sen ;
@@ -183,17 +183,17 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		    	float degree = arg0.values[2];
 
 		    	if(degree > 2){
-					sens.check(R.id.ouest);	
+					activity.rotation(-90);
 					directionChange("Gauche", pris_en_compte);
 					pris_en_compte = false;
 				}					
 				else if(degree < -2){
-					sens.check(R.id.est);
+					activity.rotation(90);
 					directionChange("Droite", pris_en_compte);
 					pris_en_compte = false;
 				}								
 				else{
-					sens.check(R.id.nord);
+					activity.rotation(0);
 					pris_en_compte = true;
 				}				
 			}
@@ -359,8 +359,8 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		return pause;
 	}
 	
-	public boolean reset(final RoueMActivity roueactivity){
-		AlertDialog.Builder builder = new AlertDialog.Builder(roueactivity);
+	public boolean reset(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		 builder.setMessage("Voulez-vous supprimer l'ensemble des données ?")
 		        .setCancelable(false)
 		        .setPositiveButton("Oui je le veux", new DialogInterface.OnClickListener() {
@@ -372,7 +372,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		       		 	distance.setText("Appuyer sur Start");
 		       		 	resultataff.setText("");
 		       		 	mesure = "" ;
-		       		 	roueactivity.changedBoutton(true, false, false, false);
+		       		 	activity.changedBoutton(true, false, false, false);
 		                activity.getApplication();
 		            }
 
