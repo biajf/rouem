@@ -54,6 +54,7 @@ public class CapteurWFBikeCadence extends CapteurWF {
 		if (bscConnection != null && bscConnection.isConnected()) {
 		WFBikeSpeedCadenceData bscData = bscConnection.getBikeSpeedCadenceData();
 		tour = bscData.accumWheelRevolutions;
+		//tour = -1;
 		}
 		else 
 		{
