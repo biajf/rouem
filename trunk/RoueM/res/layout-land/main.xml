@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Appuyer sur start"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TableLayout
+            android:id="@+id/bouttons"
+            android:layout_width="325dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="14dp"
+            android:layout_marginRight="15dp" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/start"
+                    android:layout_width="150dp"
+                    android:layout_height="70dp"
+                    android:layout_marginLeft="10dp"
+                    android:onClick="start"
+                    android:text="Start"
+                    android:textColor="#12A90A"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/stop"
+                    android:layout_width="150dp"
+                    android:layout_height="70dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="stop"
+                    android:text="Stop"
+                    android:textColor="#FF0000"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/pause"
+                    android:layout_width="150dp"
+                    android:layout_height="70dp"
+                    android:layout_marginLeft="10dp"
+                    android:onClick="pause"
+                    android:text="Pause"
+                    android:textColor="#FFFF00"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/reset"
+                    android:layout_width="150dp"
+                    android:layout_height="70dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="reset"
+                    android:text="Reset"
+                    android:textColor="#808080"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+            </TableRow>
+        </TableLayout>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="88dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/bouttons"
+            android:layout_marginRight="112dp"
+            android:src="@drawable/fleche" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="200dp"
+        android:layout_height="400dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/distance"
+        android:layout_weight="0.41" >
+
+        <TextView
+            android:id="@+id/resultat"
+            android:layout_width="200dp"
+            android:layout_height="400dp"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="25dp"
+            android:text=" "
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </ScrollView>
+
+    </RelativeLayout>
+
+</LinearLayout>
