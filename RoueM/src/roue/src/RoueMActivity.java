@@ -2,6 +2,8 @@ package roue.src;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -11,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -117,11 +120,11 @@ public class RoueMActivity extends Activity {
             case R.id.option:
                Toast.makeText(this, "Option", Toast.LENGTH_SHORT).show();
                return true;
-            case R.id.favoris:
-                Toast.makeText(this, "Favoris", Toast.LENGTH_SHORT).show();
+            case R.id.nbcaps:
+            	text("Nombre de capteurs");
                 return true;
-            case R.id.stats:
-                Toast.makeText(this, "Stats", Toast.LENGTH_SHORT).show();
+            case R.id.circonf:
+                text("Circonférence");
                 return true;
            case R.id.quitter:
                //Pour fermer l'application il suffit de faire finish()
@@ -141,4 +144,29 @@ public class RoueMActivity extends Activity {
 		    image.setImageBitmap(bitmapRotate);
 		    
 		}
+		
+		public void text(String titre){
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(titre);
+
+			final EditText input = new EditText(this);
+
+			input.setText("1");
+			builder.setView(input);
+
+			builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					// do stuff ////////////////////////////////////////////
+			}
+			});
+
+			builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				// do stuff ////////////////////////////////////////////
+			}
+			});
+
+				builder.create();
+				builder.show();
+			}
 }
