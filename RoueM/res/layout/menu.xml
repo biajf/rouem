@@ -6,11 +6,11 @@
       android:icon="@android:drawable/ic_menu_preferences">
  
      <menu android:id="@+id/sousmenu">
-	 <item android:id="@+id/favoris"
-	       android:title="Favoris"   />	
+	 <item android:id="@+id/circonf"
+	       android:title="Circonférence"   />	
  
-	 <item android:id="@+id/stats"
-	       android:title="Stats"  />
+	 <item android:id="@+id/nbcaps"
+	       android:title="Nombre de Capteurs"  />
      </menu>
 </item>
  
