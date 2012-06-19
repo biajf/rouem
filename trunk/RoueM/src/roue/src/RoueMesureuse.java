@@ -416,8 +416,8 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	
 	public String export(Context context){
 		String entete = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-		createFile("/RoueM/test.xml", entete+xmlString, context);
-		return "/RoueM/test.xml";
+		createFile(Environment.getExternalStorageDirectory().getAbsolutePath()+"/test.xml", entete+xmlString, context);
+		return Environment.getExternalStorageDirectory().getAbsolutePath()+"/test.xml";
 	}
 	
 
