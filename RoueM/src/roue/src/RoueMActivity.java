@@ -43,6 +43,7 @@ public class RoueMActivity extends Activity {
 	private Button bstart, bpause, breset, bstop = null;
 	private RadioGroup sens = null; 
 	private ImageView image = null;
+	private MenuItem sm; 
 	
 	//Gestion de la pause et stop
 	boolean appstart = false;
@@ -101,6 +102,7 @@ public class RoueMActivity extends Activity {
 		 roue.init(getBaseContext()); 
 		 resultataff.setText("");
 		 appstart = true ;
+		 sm.setEnabled(true);
 		 
 		 }
 		 else
@@ -155,9 +157,13 @@ public class RoueMActivity extends Activity {
         //Instanciation du menu XML spécifier en un objet Menu
         inflater.inflate(R.layout.menu, menu);
  
+        sm =  menu.getItem(1);
+        
         //Il n'est pas possible de modifier l'icône d'entête du sous-menu via le fichier XML on le fait donc en JAVA
     	//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.option_white);
  
+        if(!appstart)
+        	menu.getItem(1).setEnabled(false);
         return true;
      }
 	
