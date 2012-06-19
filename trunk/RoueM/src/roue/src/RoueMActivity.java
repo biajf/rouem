@@ -40,9 +40,10 @@ public class RoueMActivity extends Activity {
 	//Sauvegarde
 	public static final String PREFS_NAME = "Preference";
 	int donnees;
-	 
+	SharedPreferences settings = null ;
 	// Definition de la pause
 	RoueMesureuse roue ;
+	float circonference = 1;
 	
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
@@ -57,19 +58,33 @@ public class RoueMActivity extends Activity {
 	        bstop = (Button)findViewById(R.id.stop);
 	        image = (ImageView)findViewById(R.id.imageView2);
 	        //sens = (RadioGroup)findViewById(R.id.radioGroup1);
-
+	        changedBoutton(true, false ,false ,false);
 	        // Version avec Roue Mesureuse
-	        
-	        roue = new RoueMesureuse(this, save, sens,resultataff,distance);
+	       
 	       
 	 }
 	 
 	 public void start(View v){
      	
-     	changedBoutton(false, true, true, true);
+		 if(!appstart)
+		 {
+			 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		 double diametre= settings.getInt("diam", 0) ;
+	     circonference =  (float) (diametre/1000 * Math.PI);
+	     roue = new RoueMesureuse(this, save, sens,resultataff,distance,circonference);
+     	 changedBoutton(false, true, true, true);
 		 roue.init(getBaseContext()); 
 		 resultataff.setText("");
 		 appstart = true ;
+		 
+		 }
+		 else
+		 {
+	     changedBoutton(false, true, true, true);
+		 roue.init(getBaseContext()); 
+		 resultataff.setText("");
+		 appstart = true ;
+		 }
 	 }
 	 
 	 public void stop(View v)
@@ -96,6 +111,7 @@ public class RoueMActivity extends Activity {
 		 if(appstart)
 		 {
 			 roue.reset();
+			 appstart = false ;
 		 }
 		 
 	 }
@@ -124,10 +140,14 @@ public class RoueMActivity extends Activity {
          //On regarde quel item a été cliqué grâce à son id et on déclenche une action
          switch (item.getItemId()) {
             case R.id.option:
-               Toast.makeText(this, "Option", Toast.LENGTH_SHORT).show();
+            	if(appstart)
+            	{
+            		roue.alert("Notification","Les modifications ne seront valables qu'après un reset ou un redemarrage de l'application.");
+            	}
                return true;
             case R.id.nbcaps:
-            	text("Nombre de capteurs", "nbcap");
+            	text("Nombre d'aimants", "nbcap");
+            	
                 return true;
             case R.id.diam:
                 text("Diamètre","diam");
@@ -137,6 +157,9 @@ public class RoueMActivity extends Activity {
             	return true;
            case R.id.quitter:
                //Pour fermer l'application il suffit de faire finish()
+        	   roue.stop() ;
+        	   System.exit(0);
+        	   
                finish();
                return true;
          }
