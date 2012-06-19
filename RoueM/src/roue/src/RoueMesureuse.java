@@ -179,7 +179,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 			}
 			else
 			{
-			mesure += tmp+"m\n";
+			mesure += "\t" + tmp+"m\n";
 			xmlString += "\t<distance="+tmp+"/>\n";
 			}
 		}
@@ -346,16 +346,17 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	
 	public void result()
 	{
-		 mesure += distance(sensor2.getTour())+"m\n" ;
+		 float dist = distance(sensor2.getTour());
+		 mesure += dist +"m\n" ;
 		 distancepause = 0 ;
 		 resultat.add(mesure);
-		 resultatxml.add("\t<distance_parcourue="+distance(sensor2.getTour())+"/>\n\t"+xmlString+"\t\t<distance="+(distance(sensor2.getTour())-distanceparcourue)+"/>");
+		 resultatxml.add("\t<distance_parcourue="+ dist +"/>\n\t"+xmlString+"\t\t<distance="+(dist-distanceparcourue)+"/>");
 		 sensor2.disconnectSensor();
 		 mHardwareConnector.destroy();
 		 String tmp = "" ;
 		 for(int i=0; i<resultat.size(); i++)
 		 {
-		 tmp += "Mesure "+i + " :\n" +"\t"+resultat.get(i).toString();
+		 tmp += "Mesure "+i + " : " + dist + "m\n" +"\t"+resultat.get(i).toString();
 		 }
 		 distance.setText("Appuyer sur Start");
 		 resultataff.setText(tmp);
