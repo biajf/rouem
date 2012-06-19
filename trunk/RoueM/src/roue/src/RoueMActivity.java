@@ -43,6 +43,8 @@ public class RoueMActivity extends Activity {
 	public static final String PREFS_NAME = "Preference";
 	int donnees;
 	SharedPreferences settings = null ;
+	String varglo;
+	
 	// Definition de la pause
 	RoueMesureuse roue ;
 	float circonference = 1;
@@ -69,6 +71,8 @@ public class RoueMActivity extends Activity {
 		        changedBoutton(true, false ,false ,false);
 	        }
 
+	        settings = getSharedPreferences(PREFS_NAME, 0);
+	        
 	        // Version avec Roue Mesureuse
 	       
 	       
@@ -190,9 +194,9 @@ public class RoueMActivity extends Activity {
 		}
 		
 		public void text(String titre, String var){
-			//Variables de sauvegarde
-			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+			//Variables de sauvegarde			
 	        donnees = settings.getInt(var, 0);
+	        varglo = var; 
 	        
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(titre);
@@ -205,12 +209,10 @@ public class RoueMActivity extends Activity {
 
 			builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-				      SharedPreferences.Editor editor = settings.edit();
-				      editor.putInt("diam", Integer.parseInt(input.getText().toString()));
-				      
-				      // Commit the edits!
-				      editor.commit();
+					SharedPreferences.Editor editor = settings.edit();
+					editor.putInt(varglo, Integer.parseInt(input.getText().toString()));
+					// Commit the edits!
+					editor.commit();
 			}
 			});
 
@@ -220,6 +222,7 @@ public class RoueMActivity extends Activity {
 			}
 			});
 
+			
 				builder.create();
 				builder.show();
 			}
