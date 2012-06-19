@@ -1,6 +1,7 @@
 package roue.src;
 
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -82,7 +83,7 @@ public class RoueMActivity extends Activity {
 	        settings = getSharedPreferences(PREFS_NAME, 0);
 	        
 	        // Version avec Roue Mesureuse
-	       
+
 	       
 	 }
 	 
