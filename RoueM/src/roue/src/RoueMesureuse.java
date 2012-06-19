@@ -1,5 +1,8 @@
 package roue.src;
 
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +19,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class RoueMesureuse implements WFHardwareConnector.Callback {
@@ -51,7 +58,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	
 	//Debug
 	String cir ="0" ;
-	private float circonference = (float)1.5 ;
+	private float circonference = 0;
 	
 	//Gestion de la pause et stop
 	boolean appstart = false;
@@ -64,12 +71,13 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	private Bundle save;
 	
 	
-	public RoueMesureuse(RoueMActivity act,Bundle saved,RadioGroup sen,TextView resultattext,TextView distancetext) {
+	public RoueMesureuse(RoueMActivity act,Bundle saved,RadioGroup sen,TextView resultattext,TextView distancetext, float circonf) {
 		activity = act ;
 		save = saved ;
 		sens = sen ;
 		resultataff = resultattext;
 		distance = distancetext;
+		circonference = circonf;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -256,7 +264,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		        catch (WFAntNotSupportedException nse) {
 		        	// ANT hardware not supported.
 		        	
-		        	alert("ANT not supported.");
+		        	alert("Erreur","ANT not supported.");
 		        }
 		        catch (WFAntServiceNotInstalledException nie) {
 
@@ -273,13 +281,13 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		        }
 				catch (WFAntException e) {
 					
-					alert( "ANT initialization error.");
+					alert( "Erreur" ,"ANT initialization error.");
 				}
 	       }
 	        else {
 	        	// ANT hardware not supported.
 	        	
-	        	alert("ANT not supported.");
+	        	alert("Erreur" ,"ANT not supported.");
 	        }
 	        
 	        if(!activity.isFinishing())
@@ -309,10 +317,10 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		
 	}
 	
-	public void alert(String msg)
+	public void alert(String notification,String msg)
 	{
 		AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-		alertDialog.setTitle("Erreur");
+		alertDialog.setTitle(notification);
 		alertDialog.setMessage(msg);
 		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 		   public void onClick(DialogInterface dialog, int which) {
@@ -387,4 +395,45 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		return appstart;
 		 
 	}
+	
+	private void createFile(String strFile, String data , Context context) {
+		try {
+			FileOutputStream fos = new FileOutputStream(strFile);
+			Writer out = new OutputStreamWriter(fos, "UTF-8");
+			out.write(data);
+			out.flush();
+			out.close();
+		 
+		} catch (Throwable t) {
+			Toast.makeText(context, "Request failed: " + t.toString(),Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	private void sendEmail(String address,String subject,String emailText, String strFile,Context context){
+		try
+		{
+			strFile = Environment.getExternalStorageDirectory().getAbsolutePath() + strFile;
+			final Intent emailIntent = new Intent(
+			android.content.Intent.ACTION_SEND);
+			emailIntent.setType("plain/text");
+			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,new String[] { address });
+			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+			emailIntent.putExtra(Intent.EXTRA_STREAM,Uri.parse("file://" + strFile));
+			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, emailText);
+			activity.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+		 
+		} catch (Throwable t) {
+			Toast.makeText(context, "Request failed: " + t.toString(),Toast.LENGTH_LONG).show();
+		}
+	}
+
+	public void stop() {
+		if(sensor2 != null && mHardwareConnector != null)
+		{
+		sensor2.disconnectSensor();
+		mHardwareConnector.destroy();
+		}
+		
+	}
+	
 }
