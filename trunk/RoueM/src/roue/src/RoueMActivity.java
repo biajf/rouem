@@ -78,6 +78,9 @@ public class RoueMActivity extends Activity {
 	       
 	 }
 	 
+	 protected void onDestroy() {
+	        super.onDestroy();
+	 }
 	 public void start(View v){
      	
 		 if(!appstart)
