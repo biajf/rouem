@@ -6,14 +6,27 @@
       android:icon="@android:drawable/ic_menu_preferences">
  
      <menu android:id="@+id/sousmenu">
-	 <item android:id="@+id/circonf"
-	       android:title="Circonférence"   />	
+	 <item android:id="@+id/diam"
+	       android:title="Diamètre roue"   />	
  
 	 <item android:id="@+id/nbcaps"
 	       android:title="Nombre de Capteurs"  />
      </menu>
 </item>
  
+<item android:id="@+id/partager" 
+      android:title="Partager"
+      android:icon="@android:drawable/ic_menu_preferences">
+ 
+     <menu android:id="@+id/sousmenu2">
+	 <item android:id="@+id/mail"
+	       android:title="Envoie mail"   />	
+ 
+	 <item android:id="@+id/fichier"
+	       android:title="Fichier"  />
+     </menu>
+</item>
+
 <item android:id="@+id/quitter" 
      android:title="Quitter"
      android:icon="@android:drawable/ic_lock_power_off" />
