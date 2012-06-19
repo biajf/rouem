@@ -1,16 +1,24 @@
 package roue.src;
 
 
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
 import com.wahoofitness.api.WFHardwareConnector;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -172,7 +180,7 @@ public class RoueMActivity extends Activity {
             case R.id.partager :            	
             	return true;
             case R.id.mail :
-            	roue.sendEmail("", "", "", "", getBaseContext());
+            	sendEmail("", "", "", "", getBaseContext());
             	return true;
             case R.id.quitter:
                //Pour fermer l'application il suffit de faire finish()
@@ -244,4 +252,25 @@ public class RoueMActivity extends Activity {
 			});
 			alertDialog.show();
 		}
+		
+
+		public void sendEmail(String address,String subject,String emailText, String strFile,Context context){
+			
+			try
+			{
+				strFile = Environment.getExternalStorageDirectory().getAbsolutePath() + strFile;
+				final Intent emailIntent = new Intent(
+				android.content.Intent.ACTION_SEND);
+				emailIntent.setType("plain/text");
+				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,new String[] { address });
+				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+				emailIntent.putExtra(Intent.EXTRA_STREAM,Uri.parse("file://" + strFile));
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, emailText);
+				this.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+			 
+			} catch (Throwable t) {
+				Toast.makeText(context, "Request failed: " + t.toString(),Toast.LENGTH_LONG).show();
+			}
+		}
+		
 }
