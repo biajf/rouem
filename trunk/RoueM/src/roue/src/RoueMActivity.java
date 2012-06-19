@@ -60,7 +60,7 @@ public class RoueMActivity extends Activity {
 	        bstop = (Button)findViewById(R.id.stop);
 	        image = (ImageView)findViewById(R.id.imageView2);
 	        //sens = (RadioGroup)findViewById(R.id.radioGroup1);
-	        if (WFHardwareConnector.hasAntSupport(getBaseContext())) {
+	        if (!WFHardwareConnector.hasAntSupport(getBaseContext())) {
 	        	 alert("Erreur","ANT+ n'est pas supporté par votre matèriel ");
 	        	 changedBoutton(false, false ,false ,false);
 	        }
