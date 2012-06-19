@@ -409,7 +409,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		}
 	}
 	
-	private void sendEmail(String address,String subject,String emailText, String strFile,Context context){
+	public void sendEmail(String address,String subject,String emailText, String strFile,Context context){
 		try
 		{
 			strFile = Environment.getExternalStorageDirectory().getAbsolutePath() + strFile;

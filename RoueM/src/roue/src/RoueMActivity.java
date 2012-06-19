@@ -169,10 +169,12 @@ public class RoueMActivity extends Activity {
             case R.id.diam:
                 text("Diamètre","diam");
                 return true;
-            case R.id.partager :
-            	
+            case R.id.partager :            	
             	return true;
-           case R.id.quitter:
+            case R.id.mail :
+            	roue.sendEmail("", "", "", "", getBaseContext());
+            	return true;
+            case R.id.quitter:
                //Pour fermer l'application il suffit de faire finish()
         	   if (appstart) {
         	   roue.stop() ;
