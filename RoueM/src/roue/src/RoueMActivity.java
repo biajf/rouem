@@ -1,6 +1,8 @@
 package roue.src;
 
 
+import com.wahoofitness.api.WFHardwareConnector;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -58,7 +60,15 @@ public class RoueMActivity extends Activity {
 	        bstop = (Button)findViewById(R.id.stop);
 	        image = (ImageView)findViewById(R.id.imageView2);
 	        //sens = (RadioGroup)findViewById(R.id.radioGroup1);
-	        changedBoutton(true, false ,false ,false);
+	        if (WFHardwareConnector.hasAntSupport(getBaseContext())) {
+	        	 alert("Erreur","ANT+ n'est pas supporté par votre matèriel ");
+	        	 changedBoutton(false, false ,false ,false);
+	        }
+	        else
+	        {
+		        changedBoutton(true, false ,false ,false);
+	        }
+
 	        // Version avec Roue Mesureuse
 	       
 	       
@@ -142,7 +152,7 @@ public class RoueMActivity extends Activity {
             case R.id.option:
             	if(appstart)
             	{
-            		roue.alert("Notification","Les modifications ne seront valables qu'après un reset ou un redemarrage de l'application.");
+            		alert("Notification","Les modifications ne seront valables qu'après un reset ou un redemarrage de l'application.");
             	}
                return true;
             case R.id.nbcaps:
@@ -211,4 +221,17 @@ public class RoueMActivity extends Activity {
 				builder.create();
 				builder.show();
 			}
+		
+		public void alert(String notification,String msg)
+		{
+			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+			alertDialog.setTitle(notification);
+			alertDialog.setMessage(msg);
+			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+			   public void onClick(DialogInterface dialog, int which) {
+			      // here you can add functions
+			   }
+			});
+			alertDialog.show();
+		}
 }
