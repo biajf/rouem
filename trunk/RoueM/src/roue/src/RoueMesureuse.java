@@ -55,7 +55,8 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	
 	// Enregistrement résultat 
 	List<String> resultat = new ArrayList<String>() ;
-	
+	List<String> resultatxml = new ArrayList<String>() ;
+
 	// Calibration 
 	
 	//Debug
@@ -163,7 +164,9 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	public void directionChange(String direction, boolean pris_en_compte)
 	{
 		if(pris_en_compte &! pause){
-			float tmp = distance(sensor2.getTour()) ;
+			
+			float tmp = distance(sensor2.getTour()) - distanceparcourue ;
+			distanceparcourue += tmp ;
 			if(direction == "Droite")
 			{
 			 mesure += "\t"+tmp+"m\n"+"	Droite\n";
@@ -344,19 +347,20 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	public void result()
 	{
 		 mesure += distance(sensor2.getTour())+"m\n" ;
-		 sensor2.disconnectSensor();
-		 mHardwareConnector.destroy();
 		 distancepause = 0 ;
 		 resultat.add(mesure);
+		 resultatxml.add("\t<distance_parcourue="+distance(sensor2.getTour())+"/>\n\t"+xmlString+"<distance="+(distance(sensor2.getTour())-distanceparcourue)+"/>");
+		 sensor2.disconnectSensor();
+		 mHardwareConnector.destroy();
 		 String tmp = "" ;
 		 for(int i=0; i<resultat.size(); i++)
 		 {
 		 tmp += "Mesure "+i + " :\n" +"\t"+resultat.get(i).toString();
-		 xmlString = "<mesure=" + i + "> \n\t <distace_parcourue=" + 12 + "/>\n" + xmlString + "</mesure>"; 
 		 }
 		 distance.setText("Appuyer sur Start");
 		 resultataff.setText(tmp);
 		 mesure = "" ;
+		 xmlString = "";
 	}
 	public boolean gestpause(Boolean pause){
 		if(pause)
@@ -417,7 +421,10 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	
 	public String export(Context context){
 		String entete = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
-
+		 for(int i=0; i<resultat.size(); i++)
+		 {
+		 xmlString = "<mesure=" + i + ">\n\t"+ resultatxml.get(i).toString() + "\n" + "</mesure>"; 
+		 }
 		File folder = new File("/mnt/sdcard/RoueM/"); 
 		if (!folder.exists()) { 
 		    folder.mkdir(); 
