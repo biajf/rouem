@@ -180,7 +180,11 @@ public class RoueMActivity extends Activity {
             case R.id.partager :            	
             	return true;
             case R.id.mail :
-            	sendEmail("", "", "", "", getBaseContext());
+            	String tmp = roue.export(getBaseContext());
+            	sendEmail("", "", "", tmp, getBaseContext());
+            	return true;
+            case R.id.fichier :
+            	roue.export(getBaseContext());
             	return true;
             case R.id.quitter:
                //Pour fermer l'application il suffit de faire finish()
@@ -258,7 +262,7 @@ public class RoueMActivity extends Activity {
 			
 			try
 			{
-				strFile = Environment.getExternalStorageDirectory().getAbsolutePath() + strFile;
+				strFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + strFile;
 				final Intent emailIntent = new Intent(
 				android.content.Intent.ACTION_SEND);
 				emailIntent.setType("plain/text");
