@@ -167,7 +167,9 @@ public class RoueMActivity extends Activity {
             	return true;
            case R.id.quitter:
                //Pour fermer l'application il suffit de faire finish()
+        	   if (appstart) {
         	   roue.stop() ;
+        	   }
         	   System.exit(0);
         	   
                finish();
