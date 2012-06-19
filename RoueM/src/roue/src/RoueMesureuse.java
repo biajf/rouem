@@ -170,17 +170,17 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 			if(direction == "Droite")
 			{
 			 mesure += "\t"+tmp+"m\n"+"	Droite\n";
-			 xmlString += "\t\t<distance="+tmp+"/>\n"+"\t<Droite/>\n";
+			 xmlString += "\t\t<distance="+tmp+"/>\n"+"\t<Droite  = "+distanceparcourue+"/>\n";
 			}
 			else if(direction == "Gauche")
 			{
 			 mesure += "\t"+tmp+"m\n"+"	Gauche\n";
-			 xmlString += "\t\t<distance="+tmp+"/>\n"+"\t<Gauche/>\n";
+			 xmlString += "\t\t<distance="+tmp+"/>\n"+"\t<Gauche = "+distanceparcourue+"/>\n";
 			}
 			else
 			{
 			mesure += tmp+"m\n";
-			xmlString += "\t\t<distance="+tmp+"/>\n";
+			xmlString += "\t<distance="+tmp+"/>\n";
 			}
 		}
 		
