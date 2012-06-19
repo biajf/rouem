@@ -349,7 +349,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		 mesure += distance(sensor2.getTour())+"m\n" ;
 		 distancepause = 0 ;
 		 resultat.add(mesure);
-		 resultatxml.add("\t<distance_parcourue="+distance(sensor2.getTour())+"/>\n\t"+xmlString+"<distance="+(distance(sensor2.getTour())-distanceparcourue)+"/>");
+		 resultatxml.add("\t<distance_parcourue="+distance(sensor2.getTour())+"/>\n\t"+xmlString+"\t\t<distance="+(distance(sensor2.getTour())-distanceparcourue)+"/>");
 		 sensor2.disconnectSensor();
 		 mHardwareConnector.destroy();
 		 String tmp = "" ;
@@ -387,9 +387,11 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		       		 	mHardwareConnector.destroy();
 		       		 	distancepause = 0 ;
 		       		 	resultat.clear();
+		       		 	resultatxml.clear();
 		       		 	distance.setText("Appuyer sur Start");
 		       		 	resultataff.setText("");
 		       		 	mesure = "" ;
+		       		 	xmlString = "";		       		 	
 		       		 	activity.changedBoutton(true, false, false, false);
 		                activity.getApplication();
 		            }
