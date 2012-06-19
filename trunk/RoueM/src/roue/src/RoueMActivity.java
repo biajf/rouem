@@ -80,7 +80,7 @@ public class RoueMActivity extends Activity {
 		        changedBoutton(true, false ,false ,false);
 	        }
 
-	        settings = getSharedPreferences(PREFS_NAME, 0);
+	        settings = getSharedPreferences(PREFS_NAME, 1);
 	        
 	        // Version avec Roue Mesureuse
 
@@ -94,9 +94,8 @@ public class RoueMActivity extends Activity {
      	
 		 if(!appstart)
 		 {
-			 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		 double diametre= settings.getInt("diam", 0) ;
-	     circonference =  (float) (diametre/1000 * Math.PI);
+		 double diametre= settings.getInt("diam", 1000) ;
+	     circonference =  (float) (diametre/1000 * Math.PI) / settings.getInt("nbcap", 1);
 	     roue = new RoueMesureuse(this, save, sens,resultataff,distance,circonference);
      	 changedBoutton(false, true, true, true);
 		 roue.init(getBaseContext()); 
@@ -213,7 +212,7 @@ public class RoueMActivity extends Activity {
 		
 		public void text(String titre, String var){
 			//Variables de sauvegarde			
-	        donnees = settings.getInt(var, 0);
+	        donnees = settings.getInt(var, 1);
 	        varglo = var; 
 	        
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
