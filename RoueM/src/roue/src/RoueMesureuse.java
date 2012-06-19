@@ -1,5 +1,6 @@
 package roue.src;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -351,7 +352,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		 for(int i=0; i<resultat.size(); i++)
 		 {
 		 tmp += "Mesure "+i + " :\n" +"\t"+resultat.get(i).toString();
-		 xmlString = "<mesure=" + i + "> \n\t <distace_parcourue=" + resultat.get(i).toString() + "/>\n" + xmlString; 
+		 xmlString = "<mesure=" + i + "> \n\t <distace_parcourue=" + 12 + "/>\n" + xmlString + "</mesure>"; 
 		 }
 		 distance.setText("Appuyer sur Start");
 		 resultataff.setText(tmp);
@@ -415,9 +416,14 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	}
 	
 	public String export(Context context){
-		String entete = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-		createFile(Environment.getExternalStorageDirectory().getAbsolutePath()+"/test.xml", entete+xmlString, context);
-		return Environment.getExternalStorageDirectory().getAbsolutePath()+"/test.xml";
+		String entete = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
+
+		File folder = new File("/mnt/sdcard/RoueM/"); 
+		if (!folder.exists()) { 
+		    folder.mkdir(); 
+		} 		
+		createFile(folder + "test.xml", entete+xmlString, context);
+		return folder + "test.xml";
 	}
 	
 
