@@ -50,6 +50,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	float distanceparcourue = 0;
 	float angle = 0;	
 	String mesure ="" ;
+	String xmlString = "";
 	
 	// Enregistrement résultat 
 	List<String> resultat = new ArrayList<String>() ;
@@ -165,14 +166,17 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 			if(direction == "Droite")
 			{
 			 mesure += "\t"+tmp+"m\n"+"	Droite\n";
+			 xmlString += "\t\t<distance="+tmp+"/>\n"+"\t<Droite/>\n";
 			}
 			else if(direction == "Gauche")
 			{
-			 mesure += "\t"+tmp+"m\n"+"	Gauche\n";	
+			 mesure += "\t"+tmp+"m\n"+"	Gauche\n";
+			 xmlString += "\t\t<distance="+tmp+"/>\n"+"\t<Gauche/>\n";
 			}
 			else
 			{
 			mesure += tmp+"m\n";
+			xmlString += "\t\t<distance="+tmp+"/>\n";
 			}
 		}
 		
@@ -347,6 +351,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		 for(int i=0; i<resultat.size(); i++)
 		 {
 		 tmp += "Mesure "+i + " :\n" +"\t"+resultat.get(i).toString();
+		 xmlString = "<mesure=" + i + "> \n\t <distace_parcourue=" + resultat.get(i).toString() + "/>\n" + xmlString; 
 		 }
 		 distance.setText("Appuyer sur Start");
 		 resultataff.setText(tmp);
@@ -407,6 +412,12 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		} catch (Throwable t) {
 			Toast.makeText(context, "Request failed: " + t.toString(),Toast.LENGTH_LONG).show();
 		}
+	}
+	
+	public String export(Context context){
+		String entete = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+		createFile("/RoueM/test.xml", entete+xmlString, context);
+		return "/RoueM/test.xml";
 	}
 	
 
