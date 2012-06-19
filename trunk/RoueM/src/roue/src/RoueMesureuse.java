@@ -422,8 +422,8 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		if (!folder.exists()) { 
 		    folder.mkdir(); 
 		} 		
-		createFile(folder + "test.xml", entete+xmlString, context);
-		return folder + "test.xml";
+		createFile(folder + "/test.xml", entete+xmlString, context);
+		return folder + "/test.xml";
 	}
 	
 
