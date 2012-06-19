@@ -4,10 +4,12 @@ package roue.src;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +37,10 @@ public class RoueMActivity extends Activity {
 	boolean appstart = false;
 	boolean pause;
 	
+	//Sauvegarde
+	public static final String PREFS_NAME = "Preference";
+	int donnees;
+	 
 	// Definition de la pause
 	RoueMesureuse roue ;
 	
@@ -121,11 +127,14 @@ public class RoueMActivity extends Activity {
                Toast.makeText(this, "Option", Toast.LENGTH_SHORT).show();
                return true;
             case R.id.nbcaps:
-            	text("Nombre de capteurs");
+            	text("Nombre de capteurs", "nbcap");
                 return true;
-            case R.id.circonf:
-                text("Circonférence");
+            case R.id.diam:
+                text("Diamètre","diam");
                 return true;
+            case R.id.partager :
+            	
+            	return true;
            case R.id.quitter:
                //Pour fermer l'application il suffit de faire finish()
                finish();
@@ -145,18 +154,28 @@ public class RoueMActivity extends Activity {
 		    
 		}
 		
-		public void text(String titre){
+		public void text(String titre, String var){
+			//Variables de sauvegarde
+			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+	        donnees = settings.getInt(var, 0);
+	        
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(titre);
 
 			final EditText input = new EditText(this);
+			input.setInputType(InputType.TYPE_CLASS_NUMBER); 
+			input.setText("" + donnees);
 
-			input.setText("1");
 			builder.setView(input);
 
 			builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					// do stuff ////////////////////////////////////////////
+					 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+				      SharedPreferences.Editor editor = settings.edit();
+				      editor.putInt("diam", Integer.parseInt(input.getText().toString()));
+				      
+				      // Commit the edits!
+				      editor.commit();
 			}
 			});
 
