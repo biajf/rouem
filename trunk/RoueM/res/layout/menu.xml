@@ -10,20 +10,22 @@
 	       android:title="Diamètre roue"   />	
  
 	 <item android:id="@+id/nbcaps"
-	       android:title="Nombre de Capteurs"  />
+	       android:title="Nombres d'aimants"  />
      </menu>
 </item>
  
 <item android:id="@+id/partager" 
       android:title="Partager"
-      android:icon="@android:drawable/ic_menu_preferences">
+      android:icon="@android:drawable/ic_menu_share">
  
      <menu android:id="@+id/sousmenu2">
 	 <item android:id="@+id/mail"
-	       android:title="Envoie mail"   />	
+	       android:title="Envoi mail" 
+	       android:icon="@android:drawable/ic_dialog_email"  />	
  
 	 <item android:id="@+id/fichier"
-	       android:title="Fichier"  />
+	       android:title="Fichier" 
+	       android:icon="@android:drawable/ic_menu_save" />
      </menu>
 </item>
 
