@@ -170,7 +170,7 @@ public class RoueMActivity extends Activity {
         	   if (appstart) {
         	   roue.stop() ;
         	   }
-        	   System.exit(0);
+        	   android.os.Process.killProcess(android.os.Process.myPid());
         	   
                finish();
                return true;

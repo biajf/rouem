@@ -432,6 +432,8 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		{
 		sensor2.disconnectSensor();
 		mHardwareConnector.destroy();
+		sensorManager.unregisterListener(gyroscope, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
+		
 		}
 		
 	}
