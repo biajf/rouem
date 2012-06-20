@@ -188,7 +188,7 @@ public class RoueMActivity extends Activity {
             	
                 return true;
             case R.id.diam:
-                text("Diamètre","diam");
+                text("Diamètre (mm)","diam");
                 return true;
             case R.id.partager :            	
             	return true;
