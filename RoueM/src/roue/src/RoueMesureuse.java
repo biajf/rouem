@@ -44,10 +44,9 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	private WFHardwareConnector mHardwareConnector;
 	private static final String TAG = "Roue";
 	private CapteurWFBikeCadence sensor2;
-	private SensorManager sensorManager;
+	private Gyroscope gyroscope;
 	
 	//Variables de Mesures
-	private boolean pris_en_compte=true;
 	float distanceparcourue = 0;
 	float angle = 0;	
 	String mesure ="" ;
@@ -186,36 +185,6 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		
 	}
 	
-
-	 public SensorEventListener gyroscope = new SensorEventListener(){
-
-			public void onAccuracyChanged(Sensor arg0, int arg1) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void onSensorChanged(SensorEvent arg0) {
-				// TODO Auto-generated method stub
-		    	float degree = arg0.values[2];
-
-		    	if(degree > 2){
-					activity.rotation(-90);
-					directionChange("Gauche", pris_en_compte);
-					pris_en_compte = false;
-				}					
-				else if(degree < -2){
-					activity.rotation(90);
-					directionChange("Droite", pris_en_compte);
-					pris_en_compte = false;
-				}								
-				else{
-					activity.rotation(0);
-					pris_en_compte = true;
-				}				
-			}
-
-	    };
-	    
 	    public void antConnect(Context context,Bundle savedInstanceState)
 		{
 			if (WFHardwareConnector.hasAntSupport(context)) {
@@ -309,8 +278,8 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 	    
 	    
 	void init(Context context){
-		 sensorManager = (SensorManager) activity.getSystemService(activity.SENSOR_SERVICE);
-	     sensorManager.registerListener(gyroscope, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);  
+		 gyroscope = new Gyroscope(Sensor.TYPE_GYROSCOPE, activity, this);
+		 gyroscope.initialiser();
 		 antConnect(context, save);
 		 Log.d(TAG, "init");
 	}
@@ -442,7 +411,7 @@ public class RoueMesureuse implements WFHardwareConnector.Callback {
 		{
 		sensor2.disconnectSensor();
 		mHardwareConnector.destroy();
-		sensorManager.unregisterListener(gyroscope, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
+		//gyroscope.disconnect();
 		
 		}
 		

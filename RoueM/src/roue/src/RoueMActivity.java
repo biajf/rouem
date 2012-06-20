@@ -43,7 +43,8 @@ public class RoueMActivity extends Activity {
 	private Button bstart, bpause, breset, bstop = null;
 	private RadioGroup sens = null; 
 	private ImageView image = null;
-	private MenuItem sm; 
+	private MenuItem sm = null; 
+	private boolean menucree = false;
 	
 	//Gestion de la pause et stop
 	boolean appstart = false;
@@ -102,7 +103,9 @@ public class RoueMActivity extends Activity {
 		 roue.init(getBaseContext()); 
 		 resultataff.setText("");
 		 appstart = true ;
-		 sm.setEnabled(true);
+		 
+		 if(menucree)
+			 sm.setEnabled(true);
 		 
 		 }
 		 else
@@ -139,6 +142,8 @@ public class RoueMActivity extends Activity {
 		 {
 			 roue.reset();
 			 appstart = false ;
+			 if(menucree)
+				 sm.setEnabled(false);
 		 }
 		 
 	 }
@@ -164,6 +169,8 @@ public class RoueMActivity extends Activity {
  
         if(!appstart)
         	menu.getItem(1).setEnabled(false);
+        
+        menucree = true ;
         return true;
      }
 	
