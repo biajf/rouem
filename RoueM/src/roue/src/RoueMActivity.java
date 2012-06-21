@@ -92,7 +92,8 @@ public class RoueMActivity extends Activity {
 	 protected void onDestroy() {
 	        super.onDestroy();
 	 }
-	 public void start(View v){
+	 
+	 private void start(View v){
      	
 		 if(!appstart)
 		 {
@@ -117,7 +118,7 @@ public class RoueMActivity extends Activity {
 		 }
 	 }
 	 
-	 public void stop(View v)
+	 private void stop(View v)
 	 {
 		changedBoutton(true, false, false, true);
 	     	
@@ -129,14 +130,14 @@ public class RoueMActivity extends Activity {
 		 
 	 }
 	 
-	 public void pause(View v){
+	 private void pause(View v){
 		 
 		if(appstart){
 			pause = roue.gestpause(pause);
 		}
 	 }
 	 
-	 public void reset(View v){
+	 private void reset(View v){
 					
 		 if(appstart)
 		 {
@@ -223,7 +224,7 @@ public class RoueMActivity extends Activity {
 		    
 		}
 		
-		public void recupValeurMenu(String titre, String var){
+		private void recupValeurMenu(String titre, String var){
 			//Variables de sauvegarde			
 	        donnees = settings.getInt(var, 1);
 	        varglo = var; 
@@ -257,7 +258,7 @@ public class RoueMActivity extends Activity {
 				builder.show();
 			}
 		
-		public void alert(String notification,String msg)
+		private void alert(String notification,String msg)
 		{
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			alertDialog.setTitle(notification);
@@ -271,7 +272,7 @@ public class RoueMActivity extends Activity {
 		}
 		
 
-		public void sendEmail(String address,String subject,String emailText, String strFile,Context context){
+		private void sendEmail(String address,String subject,String emailText, String strFile,Context context){
 			
 			try
 			{
