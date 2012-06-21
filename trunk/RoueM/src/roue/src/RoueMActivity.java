@@ -57,7 +57,7 @@ public class RoueMActivity extends Activity {
 	String varglo;
 	
 	// Definition de la pause
-	RoueMesureuse roue ;
+	Odometre roue ;
 	float circonference = 1;
 	
 	 @Override
@@ -98,7 +98,7 @@ public class RoueMActivity extends Activity {
 		 {
 		 double diametre= settings.getInt("diam", 1000) ;
 	     circonference =  (float) (diametre/1000 * Math.PI) / settings.getInt("nbcap", 1);
-	     roue = new RoueMesureuse(this, save, sens,resultataff,distance,circonference);
+	     roue = new Odometre(this, save, sens,resultataff,distance,circonference);
      	 changedBoutton(false, true, true, true);
 		 roue.init(getBaseContext()); 
 		 resultataff.setText("");
@@ -184,11 +184,11 @@ public class RoueMActivity extends Activity {
             	}
                return true;
             case R.id.nbcaps:
-            	text("Nombre d'aimants", "nbcap");
+            	recupValeurMenu("Nombre d'aimants", "nbcap");
             	
                 return true;
             case R.id.diam:
-                text("Diamètre (mm)","diam");
+                recupValeurMenu("Diamètre (mm)","diam");
                 return true;
             case R.id.partager :            	
             	return true;
@@ -223,7 +223,7 @@ public class RoueMActivity extends Activity {
 		    
 		}
 		
-		public void text(String titre, String var){
+		public void recupValeurMenu(String titre, String var){
 			//Variables de sauvegarde			
 	        donnees = settings.getInt(var, 1);
 	        varglo = var; 
