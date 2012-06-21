@@ -9,13 +9,13 @@ import android.util.Log;
 
 public class Gyroscope {
 
-	private RoueMesureuse roue;
+	private Odometre roue;
 	private boolean pris_en_compte=true;
 	private SensorManager sensorManager;
 	private int type_capteur;
 	private RoueMActivity activity;
 	
-	Gyroscope(int service, RoueMActivity act, RoueMesureuse r)
+	Gyroscope(int service, RoueMActivity act, Odometre r)
 	{
 		type_capteur = service;
 		activity = act;
