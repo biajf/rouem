@@ -53,7 +53,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 	private Gyroscope gyroscope;
 	
 	//Variables de Mesures
-	float distanceparcourue = 0;
+	//float distanceparcourue = 0;
 	float angle = 0;	
 	String mesure ="" ;
 	String xmlString = "";
@@ -180,24 +180,23 @@ public class Odometre implements WFHardwareConnector.Callback {
 		if(pris_en_compte &! pause){
 			
 			float tmpdistance = distance(sensor2.getTour()) ;
-			distanceparcourue += tmpdistance ;
+			//distanceparcourue += tmpdistance ;
 			if(direction == "Droite")
 			{
 			 //mesure += "\t"+tmp+"m\n"+"	Droite\n"
 			 mesurecourante.getListAction().add(new Action("Droite",tmpdistance));
-			 xmlString += "\t\t<distance="+tmpdistance+"/>\n"+"\t<Droite  = "+distanceparcourue+"/>\n";
+			
 			}
 			else if(direction == "Gauche")
 			{
 			 //mesure += "\t"+tmp+"m\n"+"	Gauche\n";
 				mesurecourante.getListAction().add(new Action("Gauche",tmpdistance));
-			 xmlString += "\t\t<distance="+tmpdistance+"/>\n"+"\t<Gauche = "+distanceparcourue+"/>\n";
+			
 			}
 			else
 			{
 			//mesure += "\t" + tmp+"m\n";
-			//mesurecourante.getListAction().add(new Action("Droite",tmpdistance));
-			xmlString += "\t<distance="+tmpdistance+"/>\n";
+			mesurecourante.getListAction().add(new Action("",tmpdistance));				
 			}
 		}
 		
@@ -326,11 +325,11 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 		
 		 		if(precAction == null)
 		 		{
-		 		tmp += tmpAction.getDistance() +"\n";
+		 			tmp += tmpAction.getDistance() +"\n";
 		 		}
 		 		else
 		 		{
-		 		tmp += tmpAction.getDistance() - precAction.getDistance() +"\n";
+		 			tmp += tmpAction.getDistance() - precAction.getDistance() +"\n";
 		 		}
 		 		tmp += tmpAction.getNom() + "\n";
 		 	}
@@ -355,20 +354,6 @@ public class Odometre implements WFHardwareConnector.Callback {
 	
 	public void result()
 	{
-		/* 
-		float dist = distance(sensor2.getTour());
-		 mesure += dist +"m\n" ;
-		 distancepause = 0 ;
-		 resultat.add(mesure);
-		 resultatxml.add("\t<distance_parcourue="+ dist +"/>\n\t"+xmlString+"\t\t<distance="+(dist-distanceparcourue)+"/>");
-		 sensor2.disconnectSensor();
-		 mHardwareConnector.destroy();
-		 String tmp = "" ;
-		 for(int i=0; i<resultat.size(); i++)
-		 {
-		 tmp += "Mesure "+i + " : " + dist + "m\n" +"\t"+resultat.get(i).toString();
-		 }
-		 */
 		float tmpDistance = 0 ;
 		tmpDistance = distance(sensor2.getTour()) ;
 
@@ -376,14 +361,16 @@ public class Odometre implements WFHardwareConnector.Callback {
 		mesurecourante.setDistancetotale(distance(sensor2.getTour()));
 		mesurecourante.getListAction().add(new Action("Fin mesure",tmpDistance));
 		resultatstruc.add(mesurecourante);
-		sensor2.disconnectSensor();
+		sensor2.disconnectSensor();	
 		mHardwareConnector.destroy();
+		gyroscope.disconnect();
 		 String tmp =""  ;
-			Action tmpAction ;
-			Action precAction = null;
+			
 			 for(int i=0; i<resultatstruc.size(); i++)
 			 {
-			 tmp += "Mesure " + resultatstruc.get(i).getNom() + " : " +  resultatstruc.get(i).getDistancetotale() +"\n";
+				Action tmpAction = null;
+				Action precAction = null;
+				tmp += "Mesure " + resultatstruc.get(i).getNom() + " : " +  resultatstruc.get(i).getDistancetotale() +"\n";
 			 	for(int j=0; j<resultatstruc.get(i).getListAction().size(); j++)
 			 	{
 			 		tmpAction = resultatstruc.get(i).getListAction().get(j) ;
@@ -398,7 +385,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 			 		}
 			 		else
 			 		{
-			 		tmp += tmpAction.getDistance() - precAction.getDistance() +"\n";
+			 			tmp += tmpAction.getDistance() - precAction.getDistance() +"\n";
 			 		}
 			 		tmp += tmpAction.getNom() + "\n";
 			 	}
@@ -521,7 +508,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 		{
 		sensor2.disconnectSensor();
 		mHardwareConnector.destroy();
-		//gyroscope.disconnect();
+		gyroscope.disconnect();
 		
 		}
 	}
