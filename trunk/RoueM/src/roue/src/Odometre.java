@@ -532,15 +532,15 @@ public class Odometre implements WFHardwareConnector.Callback {
 		builder.setTitle("Nom du POI :");
 
 		final EditText input = new EditText(activity);
-		final CheckBox son = new CheckBox(activity);
+		//final CheckBox son = new CheckBox(activity);
 		input.setInputType(InputType.TYPE_CLASS_TEXT); 
 		input.setText("");
-		son.setText("Ajouter un son");
+		//son.setText("Ajouter un son");
 		
 		builder.setView(input);
 		builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-					if(son.isChecked())
+					//if(son.isChecked())
 						activity.enregistrer(input.getText().toString()+resultatstruc.size()+distpoi);
 					
 					mesurecourante.getListAction().add(new Action(input.getText().toString(), distpoi));
