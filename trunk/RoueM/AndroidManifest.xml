@@ -6,6 +6,8 @@
 
     <uses-sdk android:minSdkVersion="10" />
     <uses-permission android:name="com.dsi.ant.permission.ANT" /><uses-permission android:name="com.dsi.ant.permission.ANT_ADMIN"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     
 
     <application
