@@ -93,7 +93,7 @@ public class RoueMActivity extends Activity {
 	        super.onDestroy();
 	 }
 	 
-	 private void start(View v){
+	 public void start(View v){
      	
 		 if(!appstart)
 		 {
@@ -118,7 +118,7 @@ public class RoueMActivity extends Activity {
 		 }
 	 }
 	 
-	 private void stop(View v)
+	 public void stop(View v)
 	 {
 		changedBoutton(true, false, false, true);
 	     	
@@ -130,14 +130,14 @@ public class RoueMActivity extends Activity {
 		 
 	 }
 	 
-	 private void pause(View v){
+	 public void pause(View v){
 		 
 		if(appstart){
 			pause = roue.gestpause(pause);
 		}
 	 }
 	 
-	 private void reset(View v){
+	 public void reset(View v){
 					
 		 if(appstart)
 		 {

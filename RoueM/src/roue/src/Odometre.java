@@ -59,14 +59,14 @@ public class Odometre implements WFHardwareConnector.Callback {
 	// Calibration 
 	
 	//Debug
-	String cir ="0" ;
-	private float circonference = 0;
+	String cir ="1" ;
+	private float circonference = 1;
 	
 	//Gestion de la pause et stop
 	boolean appstart = false;
 	boolean pause;
 	float distancepause = 0;
-	long tourpause;
+	long tourpause = 0;
 	
 	//Activite 
 	private RoueMActivity activity;
@@ -281,6 +281,9 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 gyroscope = new Gyroscope(Sensor.TYPE_GYROSCOPE, activity, this);
 		 gyroscope.initialiser();
 		 antConnect(context, save);
+		 distanceparcourue =0 ;
+		 distancepause = 0 ;
+		 tourpause = 0;
 		 Log.d(TAG, "init");
 	}
 
@@ -327,6 +330,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 {
 		 tmp += "Mesure "+i + " : " + dist + "m\n" +"\t"+resultat.get(i).toString();
 		 }
+		 distanceparcourue = dist ;
 		 distance.setText("Appuyer sur Start");
 		 resultataff.setText(tmp);
 		 mesure = "" ;
@@ -409,6 +413,8 @@ public class Odometre implements WFHardwareConnector.Callback {
 	public void stop() {
 		if(sensor2 != null && mHardwareConnector != null)
 		{
+		distanceparcourue =0 ;
+		distancepause = 0 ;
 		sensor2.disconnectSensor();
 		mHardwareConnector.destroy();
 		//gyroscope.disconnect();
