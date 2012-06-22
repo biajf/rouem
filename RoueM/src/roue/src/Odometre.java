@@ -28,6 +28,8 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -72,6 +74,10 @@ public class Odometre implements WFHardwareConnector.Callback {
 	private RoueMActivity activity;
 	private Bundle save;
 	
+	//Version Structure 
+	Mesure mesurecourante ;
+	List<Mesure> resultatstruc = new ArrayList<Mesure>() ;
+
 	
 	public Odometre(RoueMActivity act,Bundle saved,RadioGroup sen,TextView resultattext,TextView distancetext, float circonf) {
 		activity = act ;
@@ -80,6 +86,8 @@ public class Odometre implements WFHardwareConnector.Callback {
 		resultataff = resultattext;
 		distance = distancetext;
 		circonference = circonf;
+		
+		
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -164,22 +172,25 @@ public class Odometre implements WFHardwareConnector.Callback {
 	{
 		if(pris_en_compte &! pause){
 			
-			float tmp = distance(sensor2.getTour()) - distanceparcourue ;
-			distanceparcourue += tmp ;
+			float tmpdistance = distance(sensor2.getTour()) ;
+			distanceparcourue += tmpdistance ;
 			if(direction == "Droite")
 			{
-			 mesure += "\t"+tmp+"m\n"+"	Droite\n";
-			 xmlString += "\t\t<distance="+tmp+"/>\n"+"\t<Droite  = "+distanceparcourue+"/>\n";
+			 //mesure += "\t"+tmp+"m\n"+"	Droite\n"
+			 mesurecourante.getListAction().add(new Action("Droite",tmpdistance));
+			 xmlString += "\t\t<distance="+tmpdistance+"/>\n"+"\t<Droite  = "+distanceparcourue+"/>\n";
 			}
 			else if(direction == "Gauche")
 			{
-			 mesure += "\t"+tmp+"m\n"+"	Gauche\n";
-			 xmlString += "\t\t<distance="+tmp+"/>\n"+"\t<Gauche = "+distanceparcourue+"/>\n";
+			 //mesure += "\t"+tmp+"m\n"+"	Gauche\n";
+				mesurecourante.getListAction().add(new Action("Gauche",tmpdistance));
+			 xmlString += "\t\t<distance="+tmpdistance+"/>\n"+"\t<Gauche = "+distanceparcourue+"/>\n";
 			}
 			else
 			{
-			mesure += "\t" + tmp+"m\n";
-			xmlString += "\t<distance="+tmp+"/>\n";
+			//mesure += "\t" + tmp+"m\n";
+			//mesurecourante.getListAction().add(new Action("Droite",tmpdistance));
+			xmlString += "\t<distance="+tmpdistance+"/>\n";
 			}
 		}
 		
@@ -281,7 +292,8 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 gyroscope = new Gyroscope(Sensor.TYPE_GYROSCOPE, activity, this);
 		 gyroscope.initialiser();
 		 antConnect(context, save);
-		 distanceparcourue =0 ;
+		 mesurecourante = new Mesure(Integer.toString(resultatstruc.size())) ;
+		 //distanceparcourue =0 ;
 		 distancepause = 0 ;
 		 tourpause = 0;
 		 Log.d(TAG, "init");
@@ -292,8 +304,39 @@ public class Odometre implements WFHardwareConnector.Callback {
 		Log.d(TAG, "hwConnHasData");
 		//sensor1.connectSensor();
 		sensor2.connectSensor();
-		distance.setText( "Distance courante :"+ distance(sensor2.getTour())+"m\n");
-		resultataff.setText(mesure);
+		distance.setText( "Distance totale :"+ distance(sensor2.getTour())+"m\n");
+		String tmp =""  ;
+		Action tmpAction ;
+		Action precAction = null;
+		int size = mesurecourante.getListAction().size() ;
+		for(int j=0; j<size; j++)
+		 	{
+		 		tmpAction = mesurecourante.getListAction().get(j) ;
+		 		if(j>0)
+		 		{
+		 		precAction = mesurecourante.getListAction().get(j-1);
+		 		}
+		 		
+		 		if(precAction == null)
+		 		{
+		 		tmp += tmpAction.getDistance() +"\n";
+		 		}
+		 		else
+		 		{
+		 		tmp += tmpAction.getDistance() - precAction.getDistance() +"\n";
+		 		}
+		 		tmp += tmpAction.getNom() + "\n";
+		 	}
+		
+		float  tmpDistance = 0 ;
+		if(size>0) {
+			tmpDistance = distance(sensor2.getTour()) - mesurecourante.getListAction().get(size-1).getDistance();
+		}
+		else
+		{
+			tmpDistance = distance(sensor2.getTour()) ;
+		}
+		resultataff.setText(tmp+"\n"+tmpDistance);
 		
 	}
 	
@@ -318,7 +361,8 @@ public class Odometre implements WFHardwareConnector.Callback {
 	
 	public void result()
 	{
-		 float dist = distance(sensor2.getTour());
+		/* 
+		float dist = distance(sensor2.getTour());
 		 mesure += dist +"m\n" ;
 		 distancepause = 0 ;
 		 resultat.add(mesure);
@@ -330,10 +374,56 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 {
 		 tmp += "Mesure "+i + " : " + dist + "m\n" +"\t"+resultat.get(i).toString();
 		 }
-		 distanceparcourue = dist ;
+		 */
+		float tmpDistance ;
+		int size = mesurecourante.getListAction().size();
+		if(size>0) {
+			tmpDistance = distance(sensor2.getTour()) - mesurecourante.getListAction().get(size-1).getDistance();
+		}
+		else
+		{
+			tmpDistance = distance(sensor2.getTour()) ;
+		}
+
+		mesurecourante.setDistancetotale(distance(sensor2.getTour()));
+		mesurecourante.getListAction().add(new Action("Fin mesure",tmpDistance));
+		resultatstruc.add(mesurecourante);
+		sensor2.disconnectSensor();
+		mHardwareConnector.destroy();
+		 String tmp =""  ;
+			Action tmpAction ;
+			Action precAction = null;
+			 for(int i=0; i<resultatstruc.size(); i++)
+			 {
+			 tmp += "Mesure" + resultatstruc.get(i).getNom() + ":" +  resultatstruc.get(i).getDistancetotale() +"\n";
+			 	for(int j=0; j<resultatstruc.get(i).getListAction().size(); j++)
+			 	{
+			 		tmpAction = resultatstruc.get(i).getListAction().get(j) ;
+			 		if(j>0)
+			 		{
+			 		precAction = resultatstruc.get(i).getListAction().get(j-1);
+			 		}
+			 		
+			 		if(precAction == null)
+			 		{
+			 		tmp += tmpAction.getDistance() +"\n";
+			 		}
+			 		else
+			 		{
+			 		tmp += tmpAction.getDistance() - precAction.getDistance() +"\n";
+			 		}
+			 		tmp += tmpAction.getNom() + "\n";
+			 	}
+			 }
+		 		 
+		 
+		 
+		 
+		 //distanceparcourue = dist ;
 		 distance.setText("Appuyer sur Start");
 		 resultataff.setText(tmp);
-		 mesure = "" ;
+		// mesure = "" ;
+		 mesurecourante = null ;
 		 xmlString = "";
 	}
 	public boolean gestpause(Boolean pause){
@@ -397,24 +487,47 @@ public class Odometre implements WFHardwareConnector.Callback {
 	
 	public String export(Context context){
 		String entete = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
-		 for(int i=0; i<resultat.size(); i++)
+		String xmlString = "";
+		Action tmpAction ;
+		Action precAction = null;
+		 for(int i=0; i<resultatstruc.size(); i++)
 		 {
-		 xmlString = "<mesure=" + i + ">\n\t"+ resultatxml.get(i).toString() + "\n" + "</mesure>"; 
+		 xmlString += "<mesure="+ resultatstruc.get(i).getNom() + ">" + "<distance_totale =" + resultatstruc.get(i).getDistancetotale() +"/>";
+		 	for(int j=0; j<resultatstruc.get(i).getListAction().size(); j++)
+		 	{
+		 			tmpAction = resultatstruc.get(i).getListAction().get(j) ;
+		 		if(j>0)
+		 		{
+		 			precAction = resultatstruc.get(i).getListAction().get(j-1);
+		 		}
+		 		
+		 		if(precAction == null)
+		 		{
+		 			xmlString += "<distance = "+j+">"+tmpAction.getDistance() +"/>";
+		 		}
+		 		else
+		 		{
+		 			xmlString += "<distance = "+j+ ">" + (tmpAction.getDistance() - precAction.getDistance()) +"/>";
+		 		}
+		 		if (tmpAction.getNom() == "Droite" || tmpAction.getNom() == "Gauche")
+		 			xmlString += "<" + tmpAction.getNom() + "/>";
+		 		else
+		 			xmlString += "<POI=" + tmpAction.getNom() + "/>" + "<file = "+tmpAction.getNom()+"_"+i+"_"+tmpAction.getDistance()+"/>";
+		 	}
 		 }
 		File folder = new File("/mnt/sdcard/RoueM/"); 
 		if (!folder.exists()) { 
 		    folder.mkdir(); 
 		} 		
-		createFile(folder + "/test.xml", entete+xmlString, context);
-		return folder + "/test.xml";
+		Time date = new Time() ;
+		createFile(folder + "/" + date.format2445()+".xml", entete+xmlString, context);
+		return folder + "/" + date.format2445()+"xml";
 	}
 	
 
 	public void stop() {
 		if(sensor2 != null && mHardwareConnector != null)
 		{
-		distanceparcourue =0 ;
-		distancepause = 0 ;
 		sensor2.disconnectSensor();
 		mHardwareConnector.destroy();
 		//gyroscope.disconnect();
