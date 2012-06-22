@@ -364,12 +364,13 @@ public class Odometre implements WFHardwareConnector.Callback {
 		sensor2.disconnectSensor();	
 		mHardwareConnector.destroy();
 		gyroscope.disconnect();
-		 String tmp =""  ;
-			
+		String tmp =""  ;
+		Action tmpAction ;
+		Action precAction ;
 			 for(int i=0; i<resultatstruc.size(); i++)
 			 {
-				Action tmpAction = null;
-				Action precAction = null;
+				tmpAction = null;
+				precAction = null;
 				tmp += "Mesure " + resultatstruc.get(i).getNom() + " : " +  resultatstruc.get(i).getDistancetotale() +"\n";
 			 	for(int j=0; j<resultatstruc.get(i).getListAction().size(); j++)
 			 	{
@@ -463,11 +464,13 @@ public class Odometre implements WFHardwareConnector.Callback {
 	public String export(Context context){
 		String entete = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 		String xmlString = "";
-		Action tmpAction ;
-		Action precAction = null;
+		Action tmpAction;
+		Action precAction;
 		 for(int i=0; i<resultatstruc.size(); i++)
 		 {
-		 xmlString += "<mesure id='"+ resultatstruc.get(i).getNom() + "'>" + "<distance_totale>" + resultatstruc.get(i).getDistancetotale() +"<distance_totale/>";
+			tmpAction = null ;
+			precAction = null;
+			xmlString += "<mesure id='"+ resultatstruc.get(i).getNom() + "'>" + "<distance_totale>" + resultatstruc.get(i).getDistancetotale() +"<distance_totale/>";
 		 	for(int j=0; j<resultatstruc.get(i).getListAction().size(); j++)
 		 	{
 		 			tmpAction = resultatstruc.get(i).getListAction().get(j) ;
