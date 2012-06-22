@@ -16,6 +16,7 @@ import com.wahoofitness.api.WFHardwareConnectorTypes.WFAntError;
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFHardwareState;
 import com.wahoofitness.api.comm.WFSensorConnection;
 
+import android.R.xml;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -375,15 +376,9 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 tmp += "Mesure "+i + " : " + dist + "m\n" +"\t"+resultat.get(i).toString();
 		 }
 		 */
-		float tmpDistance ;
-		int size = mesurecourante.getListAction().size();
-		if(size>0) {
-			tmpDistance = distance(sensor2.getTour()) - mesurecourante.getListAction().get(size-1).getDistance();
-		}
-		else
-		{
-			tmpDistance = distance(sensor2.getTour()) ;
-		}
+		float tmpDistance = 0 ;
+		tmpDistance = distance(sensor2.getTour()) ;
+
 
 		mesurecourante.setDistancetotale(distance(sensor2.getTour()));
 		mesurecourante.getListAction().add(new Action("Fin mesure",tmpDistance));
@@ -395,7 +390,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 			Action precAction = null;
 			 for(int i=0; i<resultatstruc.size(); i++)
 			 {
-			 tmp += "Mesure" + resultatstruc.get(i).getNom() + ":" +  resultatstruc.get(i).getDistancetotale() +"\n";
+			 tmp += "Mesure " + resultatstruc.get(i).getNom() + " : " +  resultatstruc.get(i).getDistancetotale() +"\n";
 			 	for(int j=0; j<resultatstruc.get(i).getListAction().size(); j++)
 			 	{
 			 		tmpAction = resultatstruc.get(i).getListAction().get(j) ;
@@ -486,13 +481,13 @@ public class Odometre implements WFHardwareConnector.Callback {
 	}
 	
 	public String export(Context context){
-		String entete = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
+		String entete = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 		String xmlString = "";
 		Action tmpAction ;
 		Action precAction = null;
 		 for(int i=0; i<resultatstruc.size(); i++)
 		 {
-		 xmlString += "<mesure="+ resultatstruc.get(i).getNom() + ">" + "<distance_totale =" + resultatstruc.get(i).getDistancetotale() +"/>";
+		 xmlString += "<mesure id='"+ resultatstruc.get(i).getNom() + "'>" + "<distance_totale>" + resultatstruc.get(i).getDistancetotale() +"<distance_totale/>";
 		 	for(int j=0; j<resultatstruc.get(i).getListAction().size(); j++)
 		 	{
 		 			tmpAction = resultatstruc.get(i).getListAction().get(j) ;
@@ -503,17 +498,18 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 		
 		 		if(precAction == null)
 		 		{
-		 			xmlString += "<distance = "+j+">"+tmpAction.getDistance() +"/>";
+		 			xmlString += "<distance id='"+j+"'>"+tmpAction.getDistance() +"<distance/>";
 		 		}
 		 		else
 		 		{
-		 			xmlString += "<distance = "+j+ ">" + (tmpAction.getDistance() - precAction.getDistance()) +"/>";
+		 			xmlString += "<distance id='"+j+ "'>" + (tmpAction.getDistance() - precAction.getDistance()) +"<distance/>";
 		 		}
 		 		if (tmpAction.getNom() == "Droite" || tmpAction.getNom() == "Gauche")
 		 			xmlString += "<" + tmpAction.getNom() + "/>";
 		 		else
-		 			xmlString += "<POI=" + tmpAction.getNom() + "/>" + "<file = "+tmpAction.getNom()+"_"+i+"_"+tmpAction.getDistance()+"/>";
+		 			xmlString += "<POI='" + tmpAction.getNom() + "'/>" + "<file>"+tmpAction.getNom()+"_"+i+"_"+tmpAction.getDistance()+"<file/>";
 		 	}
+		 	xmlString += "<mesure/>";
 		 }
 		File folder = new File("/mnt/sdcard/RoueM/"); 
 		if (!folder.exists()) { 
