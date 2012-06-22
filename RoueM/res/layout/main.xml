@@ -27,14 +27,32 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </ScrollView>
-    
-     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="88dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="30dp"
-        android:src="@drawable/fleche" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="88dp"
+            android:layout_height="100dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="64dp"
+            android:src="@drawable/fleche" />
+
+        <Button
+            android:id="@+id/POI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="44dp"
+            android:text="POI"
+            android:onClick="poi" />
+
+    </RelativeLayout>
 
     <TableLayout
         android:id="@+id/bouttons"
