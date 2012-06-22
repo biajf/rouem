@@ -3,6 +3,7 @@ package roue.src;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
@@ -17,10 +18,12 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +43,7 @@ public class RoueMActivity extends Activity {
 	//Variables Graphiques
 	private TextView resultataff;
 	private TextView distance;
+	private Button poi;
 	private Button bstart, bpause, breset, bstop = null;
 	private RadioGroup sens = null; 
 	private ImageView image = null;
@@ -53,11 +57,17 @@ public class RoueMActivity extends Activity {
 	//Sauvegarde
 	public static final String PREFS_NAME = "Preference";
 	int donnees;
-	SharedPreferences settings = null ;
-	String varglo;
+	private SharedPreferences settings = null ;
+	private String varglo;
+	
+	//POI
+	private MediaRecorder mediaRecorder;
+	private File fichierEnregistre;
+	private static final String LOG_TAG_ENREGISTREUR = null;
+	 
 	
 	// Definition de la pause
-	Odometre roue ;
+	private Odometre roue ;
 	float circonference = 1;
 	
 	 @Override
@@ -67,6 +77,7 @@ public class RoueMActivity extends Activity {
 	        
 	        resultataff = (TextView)findViewById(R.id.resultat);
 	        distance = (TextView)findViewById(R.id.distance);
+	        poi = (Button) findViewById(R.id.POI);
 	        bstart = (Button)findViewById(R.id.start);
 	        bpause = (Button)findViewById(R.id.pause);
 	        breset = (Button)findViewById(R.id.reset);
@@ -83,7 +94,7 @@ public class RoueMActivity extends Activity {
 	        }
 
 	        settings = getSharedPreferences(PREFS_NAME, 1);
-	        
+	       
 	        // Version avec Roue Mesureuse
 
 	       
@@ -91,6 +102,11 @@ public class RoueMActivity extends Activity {
 	 
 	 protected void onDestroy() {
 	        super.onDestroy();
+	 }
+	 
+	 public void poi(View v){
+		 if(appstart)
+			 roue.savePoi();
 	 }
 	 
 	 public void start(View v){
@@ -258,7 +274,7 @@ public class RoueMActivity extends Activity {
 				builder.show();
 			}
 		
-		private void alert(String notification,String msg)
+		public void alert(String notification,String msg)
 		{
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			alertDialog.setTitle(notification);
@@ -289,6 +305,48 @@ public class RoueMActivity extends Activity {
 			} catch (Throwable t) {
 				Toast.makeText(context, "Request failed: " + t.toString(),Toast.LENGTH_LONG).show();
 			}
+		}
+		
+		public void enregistrer(String nom){
+			
+			File folder = new File("/mnt/sdcard/Trodomètre/Audio"); 
+			if (!folder.exists()) { 
+			    folder.mkdir(); 
+			} 		
+			// Création du fichier de destination.
+			try {		   
+			fichierEnregistre = File.createTempFile(nom,".mp4", folder);
+			} catch (IOException e) {
+			    Log.e(LOG_TAG_ENREGISTREUR, "Problème E/S avant l’enregistrement");
+			    
+			    //Ajouter alerte dialog + traitement en cas de doublons
+			    return;  // Si on est dans un méthode, sinon utiliser un if/else
+			}
+			mediaRecorder = new MediaRecorder();
+			mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC) ;
+			mediaRecorder.setOutputFormat( MediaRecorder.OutputFormat.DEFAULT ) ;
+			mediaRecorder.setAudioEncoder( MediaRecorder.AudioEncoder.DEFAULT ) ;
+			mediaRecorder.setOutputFile( fichierEnregistre.getAbsolutePath()) ;
+			try {
+				mediaRecorder.prepare();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			mediaRecorder.start();
+			
+			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+			alertDialog.setTitle("Enregistrement");
+			alertDialog.setMessage("Appuyer sur OK pour terminer l'enregistrement");
+			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+			   public void onClick(DialogInterface dialog, int which) {
+			     mediaRecorder.stop();
+			   }
+			});
+			alertDialog.show();
 		}
 		
 }

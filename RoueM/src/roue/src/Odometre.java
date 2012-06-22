@@ -29,9 +29,12 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,6 +81,9 @@ public class Odometre implements WFHardwareConnector.Callback {
 	//Version Structure 
 	Mesure mesurecourante ;
 	List<Mesure> resultatstruc = new ArrayList<Mesure>() ;
+	
+	//POI
+	private float distpoi = 0;
 
 	
 	public Odometre(RoueMActivity act,Bundle saved,RadioGroup sen,TextView resultattext,TextView distancetext, float circonf) {
@@ -253,7 +259,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 		        catch (WFAntNotSupportedException nse) {
 		        	// ANT hardware not supported.
 		        	
-		        	alert("Erreur","ANT not supported.");
+		        	activity.alert("Erreur","ANT not supported.");
 		        }
 		        catch (WFAntServiceNotInstalledException nie) {
 
@@ -270,13 +276,13 @@ public class Odometre implements WFHardwareConnector.Callback {
 		        }
 				catch (WFAntException e) {
 					
-					alert( "Erreur" ,"ANT initialization error.");
+					activity.alert( "Erreur" ,"ANT initialization error.");
 				}
 	       }
 	        else {
 	        	// ANT hardware not supported.
 	        	
-	        	alert("Erreur" ,"ANT not supported.");
+	        	activity.alert("Erreur" ,"ANT not supported.");
 	        }
 	        
 	        if(!activity.isFinishing())
@@ -339,19 +345,6 @@ public class Odometre implements WFHardwareConnector.Callback {
 		}
 		resultataff.setText(tmp+"\n"+tmpDistance);
 		
-	}
-	
-	public void alert(String notification,String msg)
-	{
-		AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-		alertDialog.setTitle(notification);
-		alertDialog.setMessage(msg);
-		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-		   public void onClick(DialogInterface dialog, int which) {
-		      // here you can add functions
-		   }
-		});
-		alertDialog.show();
 	}
 
 	@Override
@@ -506,12 +499,14 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 		}
 		 		if (tmpAction.getNom() == "Droite" || tmpAction.getNom() == "Gauche")
 		 			xmlString += "<" + tmpAction.getNom() + "/>";
+		 		else if(tmpAction.getNom() == "Fin mesure")
+		 			xmlString += "<" + tmpAction.getNom() + "/>"; 
 		 		else
 		 			xmlString += "<POI='" + tmpAction.getNom() + "'/>" + "<file>"+tmpAction.getNom()+"_"+i+"_"+tmpAction.getDistance()+"<file/>";
 		 	}
 		 	xmlString += "<mesure/>";
 		 }
-		File folder = new File("/mnt/sdcard/RoueM/"); 
+		File folder = new File("/mnt/sdcard/Trodomètre/"); 
 		if (!folder.exists()) { 
 		    folder.mkdir(); 
 		} 		
@@ -529,7 +524,35 @@ public class Odometre implements WFHardwareConnector.Callback {
 		//gyroscope.disconnect();
 		
 		}
-		
 	}
-	
+
+	public void savePoi(){
+		distpoi = distance(sensor2.getTour());
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setTitle("Nom du POI :");
+
+		final EditText input = new EditText(activity);
+		final CheckBox son = new CheckBox(activity);
+		input.setInputType(InputType.TYPE_CLASS_TEXT); 
+		input.setText("");
+		son.setText("Ajouter un son");
+		
+		builder.setView(input);
+		builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+					if(son.isChecked())
+						activity.enregistrer(input.getText().toString()+resultatstruc.size()+distpoi);
+					
+					mesurecourante.getListAction().add(new Action(input.getText().toString(), distpoi));
+			}
+		});
+
+		builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+			// do stuff ////////////////////////////////////////////
+		}
+		});		
+			builder.create();
+			builder.show();
+	}
 }
