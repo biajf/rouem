@@ -24,7 +24,6 @@ import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.format.Time;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -399,7 +398,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 	}
 	
 	public boolean reset(){
-		boolean retour;
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		 builder.setMessage("Voulez-vous supprimer l'ensemble des données ?")
 		        .setCancelable(false)
