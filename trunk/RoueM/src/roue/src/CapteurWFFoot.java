@@ -1,8 +1,5 @@
 package roue.src;
 
-import android.content.Context;
-
-
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFSensorType;
 import com.wahoofitness.api.comm.WFFootpodConnection;
 import com.wahoofitness.api.data.WFFootpodData;

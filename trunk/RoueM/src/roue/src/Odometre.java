@@ -16,33 +16,21 @@ import com.wahoofitness.api.WFHardwareConnectorTypes.WFAntError;
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFHardwareState;
 import com.wahoofitness.api.comm.WFSensorConnection;
 
-import android.R.xml;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.InputType;
-import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.Log;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class Odometre implements WFHardwareConnector.Callback {
-	
-	private RadioGroup sens = null; 
+
 	private TextView resultataff;
 	private TextView distance;
 	
@@ -53,10 +41,10 @@ public class Odometre implements WFHardwareConnector.Callback {
 	private Gyroscope gyroscope;
 	
 	//Variables de Mesures
-	//float distanceparcourue = 0;
 	float angle = 0;	
-	String mesure ="" ;
-	String xmlString = "";
+	private String nomMesure ="" ;
+	private String xmlString = "";
+	
 	
 	// Enregistrement résultat 
 	List<String> resultat = new ArrayList<String>() ;
@@ -70,7 +58,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 	
 	//Gestion de la pause et stop
 	boolean appstart = false;
-	boolean pause;
+	boolean pause = false;
 	float distancepause = 0;
 	long tourpause = 0;
 	
@@ -86,20 +74,16 @@ public class Odometre implements WFHardwareConnector.Callback {
 	private float distpoi = 0;
 
 	
-	public Odometre(RoueMActivity act,Bundle saved,RadioGroup sen,TextView resultattext,TextView distancetext, float circonf) {
+	public Odometre(RoueMActivity act,Bundle saved,TextView resultattext,TextView distancetext, float circonf) {
 		activity = act ;
 		save = saved ;
-		sens = sen ;
 		resultataff = resultattext;
 		distance = distancetext;
-		circonference = circonf;
-		
+		circonference = circonf;		
 		
 		// TODO Auto-generated constructor stub
 	}
 	
-    ///////////////////////////////////////////////////////////////////////////
-	//
 	// WFHardwareConnector.Callback Implementation
     @Override
 	public void hwConnAntError(WFAntError error) {
@@ -170,7 +154,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 	{
 		if(tour != -1)
 		{
-		return tour*circonference - distancepause;
+			return tour*circonference - distancepause;
 		}
 		else return 0;
 	}
@@ -183,23 +167,20 @@ public class Odometre implements WFHardwareConnector.Callback {
 			//distanceparcourue += tmpdistance ;
 			if(direction == "Droite")
 			{
-			 //mesure += "\t"+tmp+"m\n"+"	Droite\n"
-			 mesurecourante.getListAction().add(new Action("Droite",tmpdistance));
-			
+				//mesure += "\t"+tmp+"m\n"+"	Droite\n"
+				mesurecourante.getListAction().add(new Action("Droite",tmpdistance));			
 			}
 			else if(direction == "Gauche")
 			{
-			 //mesure += "\t"+tmp+"m\n"+"	Gauche\n";
-				mesurecourante.getListAction().add(new Action("Gauche",tmpdistance));
-			
+				//mesure += "\t"+tmp+"m\n"+"	Gauche\n";
+				mesurecourante.getListAction().add(new Action("Gauche",tmpdistance));			
 			}
 			else
 			{
-			//mesure += "\t" + tmp+"m\n";
-			mesurecourante.getListAction().add(new Action("",tmpdistance));				
+				//mesure += "\t" + tmp+"m\n";
+				mesurecourante.getListAction().add(new Action("",tmpdistance));				
 			}
-		}
-		
+		}		
 	}
 	
 	    public void antConnect(Context context,Bundle savedInstanceState)
@@ -256,8 +237,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 			       
 		        }
 		        catch (WFAntNotSupportedException nse) {
-		        	// ANT hardware not supported.
-		        	
+		        	// ANT hardware not supported.		        	
 		        	activity.alert("Erreur","ANT not supported.");
 		        }
 		        catch (WFAntServiceNotInstalledException nie) {
@@ -279,8 +259,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 				}
 	       }
 	        else {
-	        	// ANT hardware not supported.
-	        	
+	        	// ANT hardware not supported.	        	
 	        	activity.alert("Erreur" ,"ANT not supported.");
 	        }
 	        
@@ -298,7 +277,8 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 gyroscope = new Gyroscope(Sensor.TYPE_GYROSCOPE, activity, this);
 		 gyroscope.initialiser();
 		 antConnect(context, save);
-		 mesurecourante = new Mesure(Integer.toString(resultatstruc.size())) ;
+		 nomMesure();
+		 mesurecourante = new Mesure(nomMesure) ;
 		 //distanceparcourue =0 ;
 		 distancepause = 0 ;
 		 tourpause = 0;
@@ -309,40 +289,42 @@ public class Odometre implements WFHardwareConnector.Callback {
 	public void hwConnHasData() {
 		Log.d(TAG, "hwConnHasData");
 		//sensor1.connectSensor();
-		sensor2.connectSensor();
-		distance.setText( "Distance totale :"+ distance(sensor2.getTour())+"m\n");
-		String tmp =""  ;
-		Action tmpAction ;
-		Action precAction = null;
-		int size = mesurecourante.getListAction().size() ;
-		for(int j=0; j<size; j++)
-		 	{
-		 		tmpAction = mesurecourante.getListAction().get(j) ;
-		 		if(j>0)
-		 		{
-		 		precAction = mesurecourante.getListAction().get(j-1);
-		 		}
-		 		
-		 		if(precAction == null)
-		 		{
-		 			tmp += tmpAction.getDistance() +"\n";
-		 		}
-		 		else
-		 		{
-		 			tmp += tmpAction.getDistance() - precAction.getDistance() +"\n";
-		 		}
-		 		tmp += tmpAction.getNom() + "\n";
-		 	}
-		
-		float  tmpDistance = 0 ;
-		if(size>0) {
-			tmpDistance = distance(sensor2.getTour()) - mesurecourante.getListAction().get(size-1).getDistance();
+		if(!pause){
+			sensor2.connectSensor();
+			distance.setText( "Distance totale :"+ distance(sensor2.getTour())+"m\n");
+			String tmp =""  ;
+			Action tmpAction ;
+			Action precAction = null;
+			int size = mesurecourante.getListAction().size() ;
+			for(int j=0; j<size; j++)
+			 	{
+			 		tmpAction = mesurecourante.getListAction().get(j) ;
+			 		if(j>0)
+			 		{
+			 		precAction = mesurecourante.getListAction().get(j-1);
+			 		}
+			 		
+			 		if(precAction == null)
+			 		{
+			 			tmp += tmpAction.getDistance() +"\n";
+			 		}
+			 		else
+			 		{
+			 			tmp += tmpAction.getDistance() - precAction.getDistance() +"\n";
+			 		}
+			 		tmp += tmpAction.getNom() + "\n";
+			 	}
+			
+			float  tmpDistance = 0 ;
+			if(size>0) {
+				tmpDistance = distance(sensor2.getTour()) - mesurecourante.getListAction().get(size-1).getDistance();
+			}
+			else
+			{
+				tmpDistance = distance(sensor2.getTour()) ;
+			}
+			resultataff.setText(tmp+"\n"+tmpDistance);
 		}
-		else
-		{
-			tmpDistance = distance(sensor2.getTour()) ;
-		}
-		resultataff.setText(tmp+"\n"+tmpDistance);
 		
 	}
 
@@ -390,10 +372,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 			 		}
 			 		tmp += tmpAction.getNom() + "\n";
 			 	}
-			 }
-		 		 
-		 
-		 
+			 }	 
 		 
 		 //distanceparcourue = dist ;
 		 distance.setText("Appuyer sur Start");
@@ -402,19 +381,23 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 mesurecourante = null ;
 		 xmlString = "";
 	}
-	public boolean gestpause(Boolean pause){
+	
+	//public boolean gestpause(Boolean pause){
+	public void gestpause(){
 		if(pause)
 		 {
 			 pause = false ;
 			 long toursortie = sensor2.getTour();
-			 distancepause = distance(toursortie-tourpause);
+			 distancepause += circonference*(toursortie-tourpause);
+			 Toast.makeText(activity, "Fin Pause", 12).show();
 		 }
 		 else
 		 {
 			 tourpause = sensor2.getTour();
+			 Toast.makeText(activity, "Pause", 12).show();
 			 pause = true;
 		 }
-		return pause;
+		//return pause;
 	}
 	
 	public boolean reset(){
@@ -430,7 +413,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 		       		 	resultatxml.clear();
 		       		 	distance.setText("Appuyer sur Start");
 		       		 	resultataff.setText("");
-		       		 	mesure = "" ;
+		       		 	//mesure = "" ; modifie samedi
 		       		 	xmlString = "";		       		 	
 		       		 	activity.changedBoutton(true, false, false, false);
 		                activity.getApplication();
@@ -525,13 +508,14 @@ public class Odometre implements WFHardwareConnector.Callback {
 		//final CheckBox son = new CheckBox(activity);
 		input.setInputType(InputType.TYPE_CLASS_TEXT); 
 		input.setText("");
+		
 		//son.setText("Ajouter un son");
 		
 		builder.setView(input);
 		builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 					//if(son.isChecked())
-						activity.enregistrer(input.getText().toString()+resultatstruc.size()+distpoi);
+						//activity.enregistrer(input.getText().toString()+resultatstruc.size()+distpoi);
 					
 					mesurecourante.getListAction().add(new Action(input.getText().toString(), distpoi));
 			}
@@ -539,10 +523,37 @@ public class Odometre implements WFHardwareConnector.Callback {
 
 		builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-			// do stuff ////////////////////////////////////////////
+			// aucune action dans ce cas
 		}
 		});		
 			builder.create();
 			builder.show();
+	}
+	
+	public void nomMesure(){
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setTitle("Nom de la mesure :");
+
+		final EditText input = new EditText(activity);
+		input.setInputType(InputType.TYPE_CLASS_TEXT); 
+		input.setText(Integer.toString(resultatstruc.size()));
+		
+		builder.setView(input);
+		builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				nomMesure = input.getText().toString();
+			}
+		});
+
+		builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+			// aucune action dans ce cas
+				
+		}
+		});		
+			builder.create();
+			builder.show();
+			//return true;
 	}
 }
