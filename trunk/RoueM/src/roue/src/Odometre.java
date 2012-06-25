@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.wahoofitness.api.WFAntException;
@@ -42,13 +44,10 @@ public class Odometre implements WFHardwareConnector.Callback {
 	
 	//Variables de Mesures
 	float angle = 0;	
-	private String nomMesure ="" ;
-	private String xmlString = "";
-	
 	
 	// Enregistrement résultat 
-	List<String> resultat = new ArrayList<String>() ;
-	List<String> resultatxml = new ArrayList<String>() ;
+//	List<String> resultat = new ArrayList<String>() ;
+//	List<String> resultatxml = new ArrayList<String>() ;
 
 	// Calibration 
 	
@@ -56,8 +55,8 @@ public class Odometre implements WFHardwareConnector.Callback {
 	String cir ="1" ;
 	private float circonference = 1;
 	
-	//Gestion de la pause et stop
-	boolean appstart = false;
+	//Gestion de la pause, reset et stop
+	boolean reset = false;
 	boolean pause = false;
 	float distancepause = 0;
 	long tourpause = 0;
@@ -278,7 +277,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 gyroscope.initialiser();
 		 antConnect(context, save);
 		 nomMesure();
-		 mesurecourante = new Mesure(nomMesure) ;
+		 mesurecourante = new Mesure(Integer.toString(resultatstruc.size())) ;
 		 //distanceparcourue =0 ;
 		 distancepause = 0 ;
 		 tourpause = 0;
@@ -379,7 +378,6 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 resultataff.setText(tmp);
 		// mesure = "" ;
 		 mesurecourante = null ;
-		 xmlString = "";
 	}
 	
 	//public boolean gestpause(Boolean pause){
@@ -401,6 +399,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 	}
 	
 	public boolean reset(){
+		boolean retour;
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		 builder.setMessage("Voulez-vous supprimer l'ensemble des données ?")
 		        .setCancelable(false)
@@ -409,25 +408,26 @@ public class Odometre implements WFHardwareConnector.Callback {
 		            	sensor2.disconnectSensor();
 		       		 	mHardwareConnector.destroy();
 		       		 	distancepause = 0 ;
-		       		 	resultat.clear();
-		       		 	resultatxml.clear();
+//		       		 	resultat.clear();
+//		       		 	resultatxml.clear();
+		       		 	resultatstruc.clear();
 		       		 	distance.setText("Appuyer sur Start");
-		       		 	resultataff.setText("");
-		       		 	//mesure = "" ; modifie samedi
-		       		 	xmlString = "";		       		 	
+		       		 	resultataff.setText("");	       		 	
 		       		 	activity.changedBoutton(true, false, false, false);
 		                activity.getApplication();
+		                reset = true;
 		            }
 
 		        })
 		        .setNegativeButton("Non", new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog, int id) {
 		                 dialog.cancel();
+		                 reset = false;
 		            }
 		        });
 		 AlertDialog alert = builder.create();
 		 alert.show();
-		return appstart;
+		return reset;
 		 
 	}
 	
@@ -479,13 +479,15 @@ public class Odometre implements WFHardwareConnector.Callback {
 		 	}
 		 	xmlString += "<mesure/>";
 		 }
-		File folder = new File("/mnt/sdcard/Trodomètre/"); 
+		File folder = new File("/mnt/sdcard/Trodometre/"); 
 		if (!folder.exists()) { 
 		    folder.mkdir(); 
 		} 		
-		Time date = new Time() ;
-		createFile(folder + "/" + date.format2445()+".xml", entete+xmlString, context);
-		return folder + "/" + date.format2445()+"xml";
+		SimpleDateFormat calend = new SimpleDateFormat("yyyyMMdd_HHmmss");
+		String currentdate = calend.format(new Date());
+
+		createFile(folder + "/" + currentdate +".xml", entete+xmlString, context);
+		return folder + "/" + currentdate + "xml";
 	}
 	
 
@@ -515,7 +517,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 		builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 					//if(son.isChecked())
-						//activity.enregistrer(input.getText().toString()+resultatstruc.size()+distpoi);
+						activity.enregistrer(input.getText().toString()+resultatstruc.size()+distpoi);
 					
 					mesurecourante.getListAction().add(new Action(input.getText().toString(), distpoi));
 			}
@@ -542,7 +544,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 		builder.setView(input);
 		builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				nomMesure = input.getText().toString();
+				mesurecourante.setNom(input.getText().toString());
 			}
 		});
 

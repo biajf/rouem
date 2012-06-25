@@ -88,11 +88,6 @@ public class RoueMActivity extends Activity {
 
 	        settings = getSharedPreferences(PREFS_NAME, 1);
 	        
-	        mediaRecorder = new MediaRecorder();
-			mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC) ;
-			mediaRecorder.setOutputFormat( MediaRecorder.OutputFormat.DEFAULT ) ;
-			mediaRecorder.setAudioEncoder( MediaRecorder.AudioEncoder.DEFAULT ) ;
-	              
 	 }
 	 
 	 protected void onDestroy() {
@@ -112,6 +107,7 @@ public class RoueMActivity extends Activity {
 		     circonference =  (float) (diametre/1000 * Math.PI) / settings.getInt("nbcap", 1);
 		     roue = new Odometre(this, save,resultataff,distance,circonference);
 	     	 changedBoutton(false, true, true, true);
+	     	 
 	     	 roue.init(getBaseContext()); 
 			 resultataff.setText("");
 			 appstart = true ;
@@ -122,6 +118,7 @@ public class RoueMActivity extends Activity {
 		 else
 		 {
 			 changedBoutton(false, true, true, true);
+			 
 			 roue.init(getBaseContext()); 
 			 resultataff.setText("");
 			 appstart = true ;
@@ -151,8 +148,8 @@ public class RoueMActivity extends Activity {
 					
 		 if(appstart)
 		 {
-			 roue.reset();
-			 appstart = false ;
+			 if(roue.reset())
+			 	 appstart = false ;
 			 if(menucree)
 				 sm.setEnabled(false);
 		 }
@@ -302,7 +299,7 @@ public class RoueMActivity extends Activity {
 		
 		public void enregistrer(String nom){
 			
-			File folder = new File("/mnt/sdcard/Trodomètre/Audio"); 
+			File folder = new File("/mnt/sdcard/Trodometre/Audio"); 
 			if (!folder.exists()) { 
 			    folder.mkdir(); 
 			} 		
@@ -315,13 +312,19 @@ public class RoueMActivity extends Activity {
 			    //Ajouter alerte dialog + traitement en cas de doublons
 			    return; 
 			}
-			
+
+	        mediaRecorder = new MediaRecorder();
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC) ;
+			mediaRecorder.setOutputFormat( MediaRecorder.OutputFormat.DEFAULT ) ;
+			mediaRecorder.setAudioEncoder( MediaRecorder.AudioEncoder.DEFAULT ) ;
 			mediaRecorder.setOutputFile( fichierEnregistre.getAbsolutePath()) ;
 			try {
+				Log.d("micro","micro");
 				mediaRecorder.prepare();
 			} catch (IllegalStateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -334,6 +337,7 @@ public class RoueMActivity extends Activity {
 			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 			   public void onClick(DialogInterface dialog, int which) {
 			     mediaRecorder.stop();
+			     mediaRecorder.release();
 			   }
 			});
 			alertDialog.show();
