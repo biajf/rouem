@@ -2,10 +2,7 @@ package roue.src;
 
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import com.wahoofitness.api.WFHardwareConnector;
 
@@ -31,7 +28,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +41,6 @@ public class RoueMActivity extends Activity {
 	private TextView distance;
 	private Button poi;
 	private Button bstart, bpause, breset, bstop = null;
-	private RadioGroup sens = null; 
 	private ImageView image = null;
 	private MenuItem sm = null; 
 	private boolean menucree = false;
@@ -83,21 +78,21 @@ public class RoueMActivity extends Activity {
 	        breset = (Button)findViewById(R.id.reset);
 	        bstop = (Button)findViewById(R.id.stop);
 	        image = (ImageView)findViewById(R.id.imageView2);
-	        //sens = (RadioGroup)findViewById(R.id.radioGroup1);
 	        if (!WFHardwareConnector.hasAntSupport(getBaseContext())) {
 	        	 alert("Erreur","ANT+ n'est pas supporté par votre matèriel ");
 	        	 changedBoutton(false, false ,false ,false);
 	        }
-	        else
-	        {
+	        else{
 		        changedBoutton(true, false ,false ,false);
 	        }
 
 	        settings = getSharedPreferences(PREFS_NAME, 1);
-	       
-	        // Version avec Roue Mesureuse
-
-	       
+	        
+	        mediaRecorder = new MediaRecorder();
+			mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC) ;
+			mediaRecorder.setOutputFormat( MediaRecorder.OutputFormat.DEFAULT ) ;
+			mediaRecorder.setAudioEncoder( MediaRecorder.AudioEncoder.DEFAULT ) ;
+	              
 	 }
 	 
 	 protected void onDestroy() {
@@ -113,24 +108,23 @@ public class RoueMActivity extends Activity {
      	
 		 if(!appstart)
 		 {
-		 double diametre= settings.getInt("diam", 1000) ;
-	     circonference =  (float) (diametre/1000 * Math.PI) / settings.getInt("nbcap", 1);
-	     roue = new Odometre(this, save, sens,resultataff,distance,circonference);
-     	 changedBoutton(false, true, true, true);
-		 roue.init(getBaseContext()); 
-		 resultataff.setText("");
-		 appstart = true ;
-		 
-		 if(menucree)
-			 sm.setEnabled(true);
-		 
+			 double diametre= settings.getInt("diam", 1000) ;
+		     circonference =  (float) (diametre/1000 * Math.PI) / settings.getInt("nbcap", 1);
+		     roue = new Odometre(this, save,resultataff,distance,circonference);
+	     	 changedBoutton(false, true, true, true);
+	     	 roue.init(getBaseContext()); 
+			 resultataff.setText("");
+			 appstart = true ;
+			 
+			 if(menucree)
+				 sm.setEnabled(true);
 		 }
 		 else
 		 {
-	     changedBoutton(false, true, true, true);
-		 roue.init(getBaseContext()); 
-		 resultataff.setText("");
-		 appstart = true ;
+			 changedBoutton(false, true, true, true);
+			 roue.init(getBaseContext()); 
+			 resultataff.setText("");
+			 appstart = true ;
 		 }
 	 }
 	 
@@ -139,9 +133,8 @@ public class RoueMActivity extends Activity {
 		changedBoutton(true, false, false, true);
 	     	
 		 if(appstart)
-		 {
-		
-		 roue.result();
+		 {		
+			 roue.result();
 		 }
 		 
 	 }
@@ -149,7 +142,8 @@ public class RoueMActivity extends Activity {
 	 public void pause(View v){
 		 
 		if(appstart){
-			pause = roue.gestpause(pause);
+			//pause = roue.gestpause(pause);
+			roue.gestpause();
 		}
 	 }
 	 
@@ -260,15 +254,14 @@ public class RoueMActivity extends Activity {
 					editor.putInt(varglo, Integer.parseInt(input.getText().toString()));
 					// Commit the edits!
 					editor.commit();
-			}
+				}
 			});
 
 			builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-				// do stuff ////////////////////////////////////////////
-			}
+				// aucune action dans ce cas
+				}
 			});
-
 			
 				builder.create();
 				builder.show();
@@ -281,7 +274,7 @@ public class RoueMActivity extends Activity {
 			alertDialog.setMessage(msg);
 			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 			   public void onClick(DialogInterface dialog, int which) {
-			      // here you can add functions
+			      // aucune action dans ce cas générique
 			   }
 			});
 			alertDialog.show();
@@ -320,12 +313,9 @@ public class RoueMActivity extends Activity {
 			    Log.e(LOG_TAG_ENREGISTREUR, "Problème E/S avant l’enregistrement");
 			    
 			    //Ajouter alerte dialog + traitement en cas de doublons
-			    return;  // Si on est dans un méthode, sinon utiliser un if/else
+			    return; 
 			}
-			mediaRecorder = new MediaRecorder();
-			mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC) ;
-			mediaRecorder.setOutputFormat( MediaRecorder.OutputFormat.DEFAULT ) ;
-			mediaRecorder.setAudioEncoder( MediaRecorder.AudioEncoder.DEFAULT ) ;
+			
 			mediaRecorder.setOutputFile( fichierEnregistre.getAbsolutePath()) ;
 			try {
 				mediaRecorder.prepare();

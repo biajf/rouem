@@ -4,13 +4,9 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
-import android.content.Context;
-
 import com.wahoofitness.api.WFHardwareConnectorTypes.WFSensorType;
 import com.wahoofitness.api.comm.WFBikeSpeedCadenceConnection;
 import com.wahoofitness.api.data.WFBikeSpeedCadenceData;
-
-
 
 
 public class CapteurWFBikeCadence extends CapteurWF {
@@ -21,7 +17,6 @@ public class CapteurWFBikeCadence extends CapteurWF {
 	}
 
 
-	
 	public enum BikeSpeedCadenceData {
 		DEVICE_ID,
 		SPEED,
@@ -62,6 +57,7 @@ public class CapteurWFBikeCadence extends CapteurWF {
 		}
 		return tour;
 	}
+	
 	public String updateDisplay() {
 		
 		String val = null ;
