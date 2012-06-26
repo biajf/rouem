@@ -4,11 +4,11 @@
     android:layout_height="fill_parent"
     android:baselineAligned="false"
     android:orientation="vertical" >
-
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent" >
-
+
         <TextView
             android:id="@+id/distance"
             android:layout_width="match_parent"
@@ -84,32 +84,41 @@
             </TableRow>
         </TableLayout>
 
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="200dp"
+            android:layout_height="400dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/distance"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="0.41" >
+
+            <TextView
+                android:id="@+id/resultat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </ScrollView>
+
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="88dp"
             android:layout_height="100dp"
             android:layout_alignParentTop="true"
-            android:layout_alignRight="@+id/bouttons"
-            android:layout_marginRight="112dp"
+            android:layout_marginLeft="44dp"
+            android:layout_toRightOf="@+id/scrollView1"
             android:src="@drawable/fleche" />
-
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="200dp"
-        android:layout_height="400dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/distance"
-        android:layout_marginLeft="15dp"
-        android:layout_weight="0.41" >
-
-        <TextView
-            android:id="@+id/resultat"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    </ScrollView>
+        <Button
+            android:id="@+id/POI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/scrollView1"
+            android:layout_marginLeft="60dp"
+            android:layout_toRightOf="@+id/imageView2"
+            android:onClick="poi"
+            android:text="POI" />
 
     </RelativeLayout>
 
