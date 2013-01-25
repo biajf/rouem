@@ -486,7 +486,7 @@ public class Odometre implements WFHardwareConnector.Callback {
 		String currentdate = calend.format(new Date());
 
 		createFile(folder + "/" + currentdate +".xml", entete+xmlString, context);
-		return folder + "/" + currentdate + "xml";
+		return folder + "/" + currentdate + ".xml";
 	}
 	
 
